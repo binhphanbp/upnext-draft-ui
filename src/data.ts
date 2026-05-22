@@ -1,0 +1,202 @@
+import type { Candidate, Job, PipelineColumn } from "./types";
+
+export const jobs: Job[] = [
+  {
+    title: "Senior Frontend Engineer",
+    company: "Nexa Fintech",
+    place: "Ho Chi Minh",
+    salary: "$2,500 - $3,800",
+    match: 96,
+    trust: 92,
+    tags: ["React", "TypeScript", "Fintech"],
+    status: "Apply fast",
+    posted: "2h ago",
+    applicants: 31,
+    model: "Hybrid",
+  },
+  {
+    title: "Backend Node.js Platform",
+    company: "CloudBridge Labs",
+    place: "Ha Noi",
+    salary: "$2,000 - $3,200",
+    match: 91,
+    trust: 86,
+    tags: ["Node.js", "AWS", "PostgreSQL"],
+    status: "Saved",
+    posted: "Today",
+    applicants: 22,
+    model: "Remote",
+  },
+  {
+    title: "DevOps Engineer",
+    company: "Orbit Commerce",
+    place: "Da Nang",
+    salary: "$1,800 - $2,900",
+    match: 84,
+    trust: 78,
+    tags: ["K8s", "Terraform", "CI/CD"],
+    status: "Follow company",
+    posted: "1d ago",
+    applicants: 18,
+    model: "Hybrid",
+  },
+  {
+    title: "AI Product Engineer",
+    company: "VectorMind AI",
+    place: "Remote",
+    salary: "$2,800 - $4,500",
+    match: 88,
+    trust: 89,
+    tags: ["Python", "LLM", "React"],
+    status: "Hot",
+    posted: "3h ago",
+    applicants: 44,
+    model: "Remote",
+  },
+  {
+    title: "QA Automation Lead",
+    company: "ShopGrid",
+    place: "Ho Chi Minh",
+    salary: "$1,700 - $2,700",
+    match: 82,
+    trust: 81,
+    tags: ["Playwright", "API Test", "Java"],
+    status: "Apply",
+    posted: "Yesterday",
+    applicants: 15,
+    model: "Onsite",
+  },
+];
+
+export const companies = [
+  { name: "Nexa Fintech", trust: 92, followers: 1240, jobs: 18, field: "Fintech" },
+  { name: "CloudBridge Labs", trust: 86, followers: 1020, jobs: 14, field: "Cloud SaaS" },
+  { name: "Orbit Commerce", trust: 80, followers: 804, jobs: 9, field: "E-commerce" },
+  { name: "VectorMind AI", trust: 89, followers: 1550, jobs: 11, field: "AI Product" },
+];
+
+export const candidates: Candidate[] = [
+  {
+    name: "Nguyen Minh Khoa",
+    role: "Senior Frontend Engineer",
+    job: "React Lead - Fintech",
+    match: 96,
+    exp: "6 years",
+    salary: "$3.2k",
+    stage: "Interview 2",
+    skills: ["React", "TypeScript", "Next.js"],
+    reason: "Strong React architecture, fintech domain, salary fits range.",
+  },
+  {
+    name: "Tran Bao Anh",
+    role: "Backend Engineer",
+    job: "Node.js Platform",
+    match: 92,
+    exp: "5 years",
+    salary: "$2.8k",
+    stage: "Shortlisted",
+    skills: ["Node.js", "AWS", "PostgreSQL"],
+    reason: "Good cloud experience and high API ownership score.",
+  },
+  {
+    name: "Pham Quoc Viet",
+    role: "DevOps Engineer",
+    job: "Cloud Infrastructure",
+    match: 89,
+    exp: "4 years",
+    salary: "$2.4k",
+    stage: "Screening",
+    skills: ["K8s", "Terraform", "CI/CD"],
+    reason: "Excellent automation skills, needs more security exposure.",
+  },
+  {
+    name: "Le Thu Ha",
+    role: "QA Automation",
+    job: "SDET - E-commerce",
+    match: 84,
+    exp: "3 years",
+    salary: "$1.9k",
+    stage: "Applied",
+    skills: ["Playwright", "API Test", "Java"],
+    reason: "Automation stack aligns, moderate domain match.",
+  },
+];
+
+export const posts = [
+  { title: "React Lead - Fintech", status: "Active", expiry: "12 days", views: "8,920", cvs: 128 },
+  { title: "Node.js Platform Engineer", status: "Boosting", expiry: "6 days", views: "6,140", cvs: 84 },
+  { title: "Data Engineer", status: "Expired", expiry: "0 days", views: "2,380", cvs: 31 },
+  { title: "Junior Tester", status: "Locked", expiry: "18 days", views: "1,190", cvs: 14 },
+];
+
+export const applicantTrend = [
+  { day: "Mon", applied: 42, shortlist: 20, interviews: 9 },
+  { day: "Tue", applied: 55, shortlist: 31, interviews: 12 },
+  { day: "Wed", applied: 49, shortlist: 28, interviews: 11 },
+  { day: "Thu", applied: 68, shortlist: 39, interviews: 16 },
+  { day: "Fri", applied: 63, shortlist: 34, interviews: 15 },
+  { day: "Sat", applied: 76, shortlist: 45, interviews: 18 },
+  { day: "Sun", applied: 73, shortlist: 43, interviews: 17 },
+];
+
+export const chartBars = [
+  { label: "13 Jan", female: 36, male: 78 },
+  { label: "Feb", female: 75, male: 95 },
+  { label: "Mar", female: 21, male: 41 },
+  { label: "Apr", female: 37, male: 79 },
+  { label: "May", female: 72, male: 98 },
+  { label: "Jun", female: 35, male: 65 },
+  { label: "Jul", female: 20, male: 46 },
+  { label: "Aug", female: 70, male: 92 },
+  { label: "Sep", female: 20, male: 54 },
+  { label: "Oct", female: 35, male: 65 },
+  { label: "Nov", female: 20, male: 47 },
+  { label: "31 Dec", female: 28, male: 50 },
+];
+
+export const pipelineSeed: PipelineColumn[] = [
+  {
+    id: "applied",
+    title: "Applied",
+    color: "#3196ec",
+    bg: "#eaf4ff",
+    items: [
+      { id: "p-1", title: "React Lead - 31 CV", person: "Nguyen Minh Khoa", sla: "SLA 1 day", tag: "Need review", match: 96 },
+      { id: "p-2", title: "DevOps - 22 CV", person: "Pham Quoc Viet", sla: "SLA 2 days", tag: "High match", match: 89 },
+      { id: "p-3", title: "SDET - 18 CV", person: "Le Thu Ha", sla: "SLA 3 days", tag: "Need review", match: 84 },
+    ],
+  },
+  {
+    id: "shortlisted",
+    title: "Shortlisted",
+    color: "#7a2cf3",
+    bg: "#f2ebff",
+    items: [
+      { id: "p-4", title: "Bao Anh - Node.js", person: "Tran Bao Anh", sla: "SLA 1 day", tag: "High match", match: 92 },
+      { id: "p-5", title: "Khoa - React Lead", person: "Nguyen Minh Khoa", sla: "SLA today", tag: "Schedule", match: 96 },
+      { id: "p-6", title: "Viet - DevOps", person: "Pham Quoc Viet", sla: "SLA 3 days", tag: "Need review", match: 89 },
+    ],
+  },
+  {
+    id: "interview",
+    title: "Interview",
+    color: "#f6a311",
+    bg: "#fff4de",
+    items: [
+      { id: "p-7", title: "Khoa - Fri 09:00", person: "Nguyen Minh Khoa", sla: "Loop 1/2", tag: "Confirmed", match: 96 },
+      { id: "p-8", title: "Bao Anh - Tue 14:00", person: "Tran Bao Anh", sla: "Loop 1/2", tag: "Waiting", match: 92 },
+      { id: "p-9", title: "Viet - Thu 10:30", person: "Pham Quoc Viet", sla: "Loop 2/2", tag: "Final loop", match: 89 },
+    ],
+  },
+  {
+    id: "offer",
+    title: "Offer",
+    color: "#2faf72",
+    bg: "#e9f8f0",
+    items: [
+      { id: "p-10", title: "Frontend Lead", person: "Nguyen Minh Khoa", sla: "Offer sent", tag: "Negotiating", match: 96 },
+      { id: "p-11", title: "Cloud Engineer", person: "Pham Quoc Viet", sla: "Offer review", tag: "Approved", match: 89 },
+      { id: "p-12", title: "QA Automation", person: "Le Thu Ha", sla: "Waiting", tag: "Drafting", match: 84 },
+    ],
+  },
+];
