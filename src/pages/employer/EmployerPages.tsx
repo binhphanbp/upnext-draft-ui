@@ -1,8 +1,23 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import {
+  closestCorners,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { BadgeCheck, BriefcaseBusiness, CalendarClock, CalendarDays, Clock3, FileText, Filter, Heart, Mail, PenLine, ShieldCheck, Sparkles, Star, UsersRound, WandSparkles } from "lucide-react";
+import { BadgeCheck, BriefcaseBusiness, CalendarClock, CalendarDays, Clock3, FileText, Filter, GripVertical, Heart, Mail, PenLine, ShieldCheck, Sparkles, Star, UsersRound, WandSparkles } from "lucide-react";
 import { applicantTrend, candidates, chartBars, pipelineSeed, posts } from "../../data";
-import type { Candidate, PipelineColumn } from "../../types";
+import type { Candidate, PipelineColumn, PipelineItem } from "../../types";
 import { AuthNotice, Avatar, ChartTooltip, Field, InsightCard, Metric, Modal, PageHeader, PanelHeader, ScoreRing } from "../../components/ui";
 
 export function EmployerDashboardPage() {
@@ -144,25 +159,32 @@ export function EmployerCandidatesPage() {
 
 export function EmployerPipelinePage() {
   const [columns, setColumns] = useState<PipelineColumn[]>(pipelineSeed);
-  const [dragged, setDragged] = useState<{ columnId: string; itemId: string } | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
 
-  function moveCard(targetColumnId: string) {
-    if (!dragged || dragged.columnId === targetColumnId) {
-      setDragged(null);
-      return;
+  const activeCard = useMemo(() => {
+    if (!activeId) return null;
+    for (const column of columns) {
+      const card = column.items.find((item) => item.id === activeId);
+      if (card) return { card, column };
     }
-    setColumns((current) => {
-      const sourceColumn = current.find((column) => column.id === dragged.columnId);
-      const movingItem = sourceColumn?.items.find((item) => item.id === dragged.itemId);
-      if (!movingItem) return current;
-      return current.map((column) => {
-        if (column.id === dragged.columnId) return { ...column, items: column.items.filter((item) => item.id !== dragged.itemId) };
-        if (column.id === targetColumnId) return { ...column, items: [{ ...movingItem, sla: targetColumnId === "interview" ? "Needs schedule" : movingItem.sla }, ...column.items] };
-        return column;
-      });
-    });
-    setDragged(null);
+    return null;
+  }, [activeId, columns]);
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id));
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const overId = event.over?.id ? String(event.over.id) : null;
+    if (overId && activeId && overId !== activeId) {
+      setColumns((current) => movePipelineCard(current, activeId, overId));
+    }
+    setActiveId(null);
   }
 
   return (
@@ -173,21 +195,27 @@ export function EmployerPipelinePage() {
         description="Kéo thả candidate giữa các cột; khi chuyển hẹn phỏng vấn, hệ thống bắt buộc nhập lịch và kiểm soát tối đa 2 vòng lặp."
         actions={<button className="primary-button" onClick={() => setScheduleOpen(true)}><CalendarClock size={15} /> Schedule interview</button>}
       />
-      <div className="pipeline-board">
-        {columns.map((column) => (
-          <section className={dragged ? "pipeline-column is-droppable" : "pipeline-column"} key={column.id} onDragOver={(event) => event.preventDefault()} onDrop={() => moveCard(column.id)}>
-            <div className="pipeline-head" style={{ "--column-color": column.color, "--column-bg": column.bg } as React.CSSProperties}><span>{column.title}</span><b>{column.items.length}</b></div>
-            {column.items.map((card) => (
-              <article className="pipeline-card" key={card.id} draggable onDragStart={() => setDragged({ columnId: column.id, itemId: card.id })} onDragEnd={() => setDragged(null)}>
-                <div className="pipeline-card-top"><strong>{card.title}</strong><b>{card.match}</b></div>
-                <span><Clock3 size={12} /> {card.sla}</span>
-                <p>{card.person}</p>
-                <div className="skill-list"><i>{card.tag}</i></div>
-              </article>
+      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragCancel={() => setActiveId(null)}>
+        <div className="pipeline-board-wrap">
+          <div className="pipeline-board" style={{ "--column-count": columns.length } as CSSProperties}>
+            {columns.map((column) => (
+              <PipelineColumnView column={column} key={column.id}>
+                <SortableContext items={column.items.map((card) => card.id)} strategy={verticalListSortingStrategy}>
+                  <div className="pipeline-list">
+                    {column.items.map((card) => (
+                      <SortablePipelineCard card={card} column={column} key={card.id} />
+                    ))}
+                    {!column.items.length && <div className="pipeline-empty">No candidates</div>}
+                  </div>
+                </SortableContext>
+              </PipelineColumnView>
             ))}
-          </section>
-        ))}
-      </div>
+          </div>
+        </div>
+        <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
+          {activeCard ? <PipelineCardPreview card={activeCard.card} column={activeCard.column} /> : null}
+        </DragOverlay>
+      </DndContext>
       <section className="panel schedule-panel">
         <PanelHeader icon={<CalendarDays size={17} />} title="Interview scheduling logic" action="View calendar" />
         <div className="schedule-grid">
@@ -200,6 +228,116 @@ export function EmployerPipelinePage() {
       {scheduleOpen && <ScheduleModal onClose={() => setScheduleOpen(false)} />}
     </>
   );
+}
+
+function PipelineColumnView({ column, children }: { column: PipelineColumn; children: ReactNode }) {
+  const { isOver, setNodeRef } = useDroppable({ id: column.id });
+
+  return (
+    <section
+      className={isOver ? "pipeline-column is-over" : "pipeline-column"}
+      ref={setNodeRef}
+      style={{ "--column-color": column.color, "--column-bg": column.bg } as CSSProperties}
+    >
+      <div className="pipeline-head">
+        <span>{column.title}</span>
+        <b>{column.items.length}</b>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function SortablePipelineCard({ card, column }: { card: PipelineItem; column: PipelineColumn }) {
+  const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({ id: card.id });
+  const style = {
+    "--column-color": column.color,
+    "--column-bg": column.bg,
+    opacity: isDragging ? 0.34 : 1,
+    transform: CSS.Transform.toString(transform),
+    transition,
+  } as CSSProperties;
+
+  return (
+    <article className={isDragging ? "pipeline-card is-dragging" : "pipeline-card"} ref={setNodeRef} style={style}>
+      <PipelineCardContent card={card} dragHandle={<button className="pipeline-drag-handle" aria-label={`Move ${card.title}`} {...attributes} {...listeners}><GripVertical size={14} /></button>} />
+    </article>
+  );
+}
+
+function PipelineCardPreview({ card, column }: { card: PipelineItem; column: PipelineColumn }) {
+  return (
+    <article className="pipeline-card pipeline-card-overlay" style={{ "--column-color": column.color, "--column-bg": column.bg } as CSSProperties}>
+      <PipelineCardContent card={card} />
+    </article>
+  );
+}
+
+function PipelineCardContent({ card, dragHandle }: { card: PipelineItem; dragHandle?: ReactNode }) {
+  return (
+    <>
+      <div className="pipeline-card-top">
+        <div>
+          <strong>{card.title}</strong>
+          <p>{card.person}</p>
+        </div>
+        <b>{card.match}</b>
+      </div>
+      <div className="pipeline-card-meta">
+        <span><Clock3 size={12} /> {card.sla}</span>
+        <i>{card.tag}</i>
+      </div>
+      {dragHandle}
+    </>
+  );
+}
+
+function movePipelineCard(columns: PipelineColumn[], activeId: string, overId: string) {
+  const source = findPipelineCard(columns, activeId);
+  if (!source) return columns;
+
+  const overColumnIndex = columns.findIndex((column) => column.id === overId);
+  const overCard = findPipelineCard(columns, overId);
+  const targetColumnIndex = overColumnIndex >= 0 ? overColumnIndex : overCard?.columnIndex;
+  if (targetColumnIndex === undefined) return columns;
+
+  if (source.columnIndex === targetColumnIndex) {
+    if (!overCard || source.itemIndex === overCard.itemIndex) return columns;
+    return columns.map((column, index) => (
+      index === source.columnIndex
+        ? { ...column, items: arrayMove(column.items, source.itemIndex, overCard.itemIndex) }
+        : column
+    ));
+  }
+
+  const movingCard = columns[source.columnIndex].items[source.itemIndex];
+  const targetColumn = columns[targetColumnIndex];
+  const insertIndex = overCard?.columnIndex === targetColumnIndex ? overCard.itemIndex : targetColumn.items.length;
+  const updatedCard = {
+    ...movingCard,
+    sla: targetColumn.id === "interview" ? "Needs schedule" : movingCard.sla,
+    tag: targetColumn.id === "hired" ? "Onboarding" : movingCard.tag,
+  };
+
+  return columns.map((column, index) => {
+    if (index === source.columnIndex) {
+      return { ...column, items: column.items.filter((item) => item.id !== activeId) };
+    }
+    if (index === targetColumnIndex) {
+      const nextItems = [...column.items];
+      nextItems.splice(insertIndex, 0, updatedCard);
+      return { ...column, items: nextItems };
+    }
+    return column;
+  });
+}
+
+function findPipelineCard(columns: PipelineColumn[], itemId: string) {
+  for (let columnIndex = 0; columnIndex < columns.length; columnIndex += 1) {
+    const itemIndex = columns[columnIndex].items.findIndex((item) => item.id === itemId);
+    if (itemIndex >= 0) return { columnIndex, itemIndex };
+  }
+  return null;
 }
 
 export function EmployerCompanyPage() {

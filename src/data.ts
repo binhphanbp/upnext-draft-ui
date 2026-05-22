@@ -164,6 +164,9 @@ export const pipelineSeed: PipelineColumn[] = [
       { id: "p-1", title: "React Lead - 31 CV", person: "Nguyen Minh Khoa", sla: "SLA 1 day", tag: "Need review", match: 96 },
       { id: "p-2", title: "DevOps - 22 CV", person: "Pham Quoc Viet", sla: "SLA 2 days", tag: "High match", match: 89 },
       { id: "p-3", title: "SDET - 18 CV", person: "Le Thu Ha", sla: "SLA 3 days", tag: "Need review", match: 84 },
+      { id: "p-13", title: "Data Engineer - 14 CV", person: "Do Minh Quan", sla: "SLA 4 days", tag: "Screening", match: 82 },
+      { id: "p-14", title: "AI Product - 9 CV", person: "Mai Thanh Truc", sla: "SLA today", tag: "New", match: 91 },
+      { id: "p-15", title: "Mobile Lead - 11 CV", person: "Hoang Gia Bao", sla: "SLA 5 days", tag: "Need review", match: 78 },
     ],
   },
   {
@@ -175,6 +178,7 @@ export const pipelineSeed: PipelineColumn[] = [
       { id: "p-4", title: "Bao Anh - Node.js", person: "Tran Bao Anh", sla: "SLA 1 day", tag: "High match", match: 92 },
       { id: "p-5", title: "Khoa - React Lead", person: "Nguyen Minh Khoa", sla: "SLA today", tag: "Schedule", match: 96 },
       { id: "p-6", title: "Viet - DevOps", person: "Pham Quoc Viet", sla: "SLA 3 days", tag: "Need review", match: 89 },
+      { id: "p-16", title: "Truc - AI Product", person: "Mai Thanh Truc", sla: "SLA 2 days", tag: "Portfolio", match: 91 },
     ],
   },
   {
@@ -197,6 +201,16 @@ export const pipelineSeed: PipelineColumn[] = [
       { id: "p-10", title: "Frontend Lead", person: "Nguyen Minh Khoa", sla: "Offer sent", tag: "Negotiating", match: 96 },
       { id: "p-11", title: "Cloud Engineer", person: "Pham Quoc Viet", sla: "Offer review", tag: "Approved", match: 89 },
       { id: "p-12", title: "QA Automation", person: "Le Thu Ha", sla: "Waiting", tag: "Drafting", match: 84 },
+    ],
+  },
+  {
+    id: "hired",
+    title: "Hired",
+    color: "#0f9f8d",
+    bg: "#e7f8f5",
+    items: [
+      { id: "p-17", title: "Backend Platform", person: "Tran Bao Anh", sla: "Start Mon", tag: "Onboarding", match: 92 },
+      { id: "p-18", title: "Frontend Architect", person: "Nguyen Minh Khoa", sla: "Contract signed", tag: "Done", match: 96 },
     ],
   },
 ];
