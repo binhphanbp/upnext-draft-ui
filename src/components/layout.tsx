@@ -1,13 +1,19 @@
+import { useState } from "react";
 import {
   Bell,
+  Building2,
   ChevronDown,
   ChevronRight,
+  CheckCircle2,
   Command,
   MessageCircle,
   MoreHorizontal,
   Search,
   Settings2,
+  ShieldCheck,
   Sparkles,
+  TrendingUp,
+  X,
   Zap,
 } from "lucide-react";
 import { upnextLogo } from "../brand";
@@ -23,18 +29,20 @@ type LayoutProps = {
 export function AppShell({ path, navigate, children }: LayoutProps) {
   const activeRoute = routes.find((route) => route.path === path) ?? routes.find((route) => route.path === "/candidate");
   const activeRole = roleFromPath(path);
+  const [pricingOpen, setPricingOpen] = useState(false);
 
   return (
     <main className="app-shell">
       <Rail path={path} navigate={navigate} />
-      <Sidebar path={path} activeRole={activeRole} navigate={navigate} />
+      <Sidebar path={path} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
       <section className="workspace">
-        <TopBar title={activeRoute?.label ?? "UpNext"} activeRole={activeRole} navigate={navigate} />
+        <TopBar title={activeRoute?.label ?? "UpNext"} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
         <section className="page-scroll">{children}</section>
       </section>
       <button className="chat-fab" aria-label="Open assistant">
         <MessageCircle size={22} fill="currentColor" />
       </button>
+      {pricingOpen && <PricingModal onClose={() => setPricingOpen(false)} />}
     </main>
   );
 }
@@ -74,10 +82,12 @@ function Sidebar({
   path,
   activeRole,
   navigate,
+  onUpgrade,
 }: {
   path: string;
   activeRole: Role;
   navigate: (path: string) => void;
+  onUpgrade: () => void;
 }) {
   const visibleRoutes = routes.filter((route) => route.role === "access" || route.role === activeRole);
 
@@ -112,10 +122,10 @@ function Sidebar({
         ))}
       </nav>
       <div className="sidebar-footer">
-        <div className="plan-pill">
+        <button className="plan-pill" onClick={onUpgrade}>
           <Zap size={14} fill="currentColor" />
           Pro hiring
-        </div>
+        </button>
         <button className="ghost-icon">
           <MoreHorizontal size={18} />
         </button>
@@ -124,7 +134,7 @@ function Sidebar({
   );
 }
 
-function TopBar({ title, activeRole, navigate }: { title: string; activeRole: Role; navigate: (path: string) => void }) {
+function TopBar({ title, activeRole, navigate, onUpgrade }: { title: string; activeRole: Role; navigate: (path: string) => void; onUpgrade: () => void }) {
   return (
     <header className="topbar">
       <div className="breadcrumb">
@@ -140,7 +150,7 @@ function TopBar({ title, activeRole, navigate }: { title: string; activeRole: Ro
           {activeRole === "candidate" ? "Candidate" : activeRole === "admin" ? "Admin" : "Recruiter"}
           <ChevronDown size={13} />
         </button>
-        <button className="upgrade">
+        <button className="upgrade" onClick={onUpgrade}>
           <Zap size={14} fill="currentColor" />
           Upgrade
         </button>
@@ -152,5 +162,96 @@ function TopBar({ title, activeRole, navigate }: { title: string; activeRole: Ro
         <ChevronDown size={14} className="muted" />
       </div>
     </header>
+  );
+}
+
+const pricingPlans = [
+  {
+    name: "Trial",
+    icon: ShieldCheck,
+    description: "Dành cho đội mới thử quy trình tuyển dụng có AI.",
+    price: "Free",
+    cadence: "",
+    current: true,
+    features: ["Applicant Tracking CRM", "1 active job post", "Resume parsing", "Basic hiring report"],
+  },
+  {
+    name: "Starter",
+    icon: Sparkles,
+    description: "Cho startup cần đăng tin và lọc CV ổn định.",
+    price: "$49",
+    cadence: "/mo",
+    features: ["5 active job posts", "300 CV parsing credits", "3 team members", "10 AI interview recordings"],
+  },
+  {
+    name: "Growth",
+    icon: TrendingUp,
+    badge: "Popular",
+    description: "Gói phù hợp nhất cho đội tuyển dụng IT đang scale.",
+    price: "$149",
+    cadence: "/mo",
+    featured: true,
+    features: ["30 active job posts", "2,000 AI match credits", "Pipeline automation", "Google/Outlook calendar sync"],
+  },
+  {
+    name: "Enterprise",
+    icon: Building2,
+    description: "Cho công ty cần SLA, phân quyền và thanh toán riêng.",
+    price: "Custom",
+    cadence: "",
+    features: ["Unlimited job posts", "Unlimited team members", "SSO and audit logs", "Dedicated support SLA"],
+  },
+];
+
+function PricingModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="pricing-backdrop" role="presentation" onMouseDown={onClose}>
+      <section className="pricing-modal" role="dialog" aria-modal="true" aria-label="Upgrade plans" onMouseDown={(event) => event.stopPropagation()}>
+        <button className="pricing-close" onClick={onClose} aria-label="Close pricing">
+          <X size={18} />
+        </button>
+        <header className="pricing-header">
+          <span><Zap size={14} fill="currentColor" /> Upgrade to Plus</span>
+          <h2>No Tricks, Just Transparent Plans</h2>
+          <p>Chọn gói phù hợp cho Candidate, Recruiter hoặc đội vận hành tuyển dụng IT.</p>
+          <div className="billing-toggle" aria-label="Billing cycle">
+            <button className="active">Monthly</button>
+            <button>Yearly <b>Save 20%</b></button>
+          </div>
+        </header>
+        <div className="pricing-grid">
+          {pricingPlans.map((plan) => {
+            const Icon = plan.icon;
+            return (
+              <article className={plan.featured ? "pricing-card featured" : "pricing-card"} key={plan.name}>
+                <div className="pricing-card-head">
+                  <div>
+                    <h3>{plan.name} {plan.badge && <em>{plan.badge}</em>}</h3>
+                    <p>{plan.description}</p>
+                  </div>
+                  <span className="plan-icon"><Icon size={21} /></span>
+                </div>
+                <div className="pricing-price">
+                  <strong>{plan.price}<small>{plan.cadence}</small></strong>
+                  <button className={plan.current ? "secondary-button" : plan.featured ? "primary-button" : "upgrade"}>
+                    {plan.current ? "Current Plan" : plan.name === "Enterprise" ? "Schedule Call" : "Upgrade"}
+                  </button>
+                </div>
+                <div className="pricing-features">
+                  <span>Unlock these features:</span>
+                  {plan.features.map((feature) => (
+                    <p key={feature}><CheckCircle2 size={14} fill="currentColor" /> {feature}</p>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <footer className="pricing-note">
+          <CheckCircle2 size={15} />
+          Không tính phí ẩn. Có thể đổi gói hoặc hủy gia hạn ở trang Company & Billing.
+        </footer>
+      </section>
+    </div>
   );
 }
