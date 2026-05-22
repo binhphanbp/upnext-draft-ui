@@ -15,7 +15,7 @@ import {
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { BadgeCheck, BriefcaseBusiness, CalendarClock, CalendarDays, Clock3, FileText, Filter, GripVertical, Heart, Mail, PenLine, ShieldCheck, Sparkles, Star, UsersRound, WandSparkles } from "lucide-react";
+import { BadgeCheck, BriefcaseBusiness, CalendarClock, CalendarDays, Clock3, Columns3, FileText, Filter, Flag, Heart, ListFilter, Mail, MessageCircle, MoreHorizontal, PenLine, Plus, Search, ShieldCheck, Sparkles, Star, UserRound, UsersRound, WandSparkles } from "lucide-react";
 import { applicantTrend, candidates, chartBars, pipelineSeed, posts } from "../../data";
 import type { Candidate, PipelineColumn, PipelineItem } from "../../types";
 import { AuthNotice, Avatar, ChartTooltip, Field, InsightCard, Metric, Modal, PageHeader, PanelHeader, ScoreRing } from "../../components/ui";
@@ -161,6 +161,11 @@ export function EmployerPipelinePage() {
   const [columns, setColumns] = useState<PipelineColumn[]>(pipelineSeed);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const pipelineCards = useMemo(() => columns.flatMap((column) => column.items), [columns]);
+  const highMatchCount = pipelineCards.filter((card) => card.match >= 90).length;
+  const interviewCount = columns.find((column) => column.id === "interview")?.items.length ?? 0;
+  const hiredCount = columns.find((column) => column.id === "hired")?.items.length ?? 0;
+  const attentionCount = pipelineCards.filter((card) => /3|4|5|Waiting|review/i.test(`${card.sla} ${card.tag}`)).length;
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -195,27 +200,53 @@ export function EmployerPipelinePage() {
         description="Kéo thả candidate giữa các cột; khi chuyển hẹn phỏng vấn, hệ thống bắt buộc nhập lịch và kiểm soát tối đa 2 vòng lặp."
         actions={<button className="primary-button" onClick={() => setScheduleOpen(true)}><CalendarClock size={15} /> Schedule interview</button>}
       />
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragCancel={() => setActiveId(null)}>
-        <div className="pipeline-board-wrap">
-          <div className="pipeline-board" style={{ "--column-count": columns.length } as CSSProperties}>
-            {columns.map((column) => (
-              <PipelineColumnView column={column} key={column.id}>
-                <SortableContext items={column.items.map((card) => card.id)} strategy={verticalListSortingStrategy}>
-                  <div className="pipeline-list">
-                    {column.items.map((card) => (
-                      <SortablePipelineCard card={card} column={column} key={card.id} />
-                    ))}
-                    {!column.items.length && <div className="pipeline-empty">No candidates</div>}
-                  </div>
-                </SortableContext>
-              </PipelineColumnView>
-            ))}
+      <section className="pipeline-workspace">
+        <div className="pipeline-toolbar">
+          <label className="pipeline-search">
+            <Search size={15} />
+            <input placeholder="Search candidates, jobs..." />
+          </label>
+          <div className="pipeline-view-toggle" aria-label="Board view">
+            <button><Columns3 size={15} /></button>
+          </div>
+          <div className="pipeline-toolbar-actions">
+            <button className="board-filter-button">Assignee</button>
+            <button className="board-filter-button">Priority</button>
+            <button className="board-filter-button"><ListFilter size={14} /> Filter</button>
+            <button className="primary-button"><Plus size={15} /> Add candidate</button>
           </div>
         </div>
-        <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
-          {activeCard ? <PipelineCardPreview card={activeCard.card} column={activeCard.column} /> : null}
-        </DragOverlay>
-      </DndContext>
+
+        <div className="pipeline-stat-row">
+          <PipelineStat color="#3196ec" icon={<Flag size={13} />} label="High match" value={highMatchCount} />
+          <PipelineStat color="#f6a311" icon={<Flag size={13} />} label="Needs attention" value={attentionCount} />
+          <PipelineStat color="#7a2cf3" icon={<CalendarClock size={13} />} label="Interview loops" value={interviewCount} />
+          <PipelineStat color="#2faf72" icon={<BadgeCheck size={13} />} label="Hired" value={hiredCount} />
+          <PipelineStat color="#11131d" icon={<BriefcaseBusiness size={13} />} label="Total candidates" value={pipelineCards.length} />
+        </div>
+
+        <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragCancel={() => setActiveId(null)}>
+          <div className="pipeline-board-wrap">
+            <div className="pipeline-board" style={{ "--column-count": columns.length } as CSSProperties}>
+              {columns.map((column) => (
+                <PipelineColumnView column={column} key={column.id}>
+                  <SortableContext items={column.items.map((card) => card.id)} strategy={verticalListSortingStrategy}>
+                    <div className="pipeline-list">
+                      {column.items.map((card) => (
+                        <SortablePipelineCard card={card} column={column} key={card.id} />
+                      ))}
+                      {!column.items.length && <div className="pipeline-empty">No candidates</div>}
+                    </div>
+                  </SortableContext>
+                </PipelineColumnView>
+              ))}
+            </div>
+          </div>
+          <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
+            {activeCard ? <PipelineCardPreview card={activeCard.card} column={activeCard.column} /> : null}
+          </DragOverlay>
+        </DndContext>
+      </section>
       <section className="panel schedule-panel">
         <PanelHeader icon={<CalendarDays size={17} />} title="Interview scheduling logic" action="View calendar" />
         <div className="schedule-grid">
@@ -227,6 +258,15 @@ export function EmployerPipelinePage() {
       </section>
       {scheduleOpen && <ScheduleModal onClose={() => setScheduleOpen(false)} />}
     </>
+  );
+}
+
+function PipelineStat({ icon, label, value, color }: { icon: ReactNode; label: string; value: number; color: string }) {
+  return (
+    <div className="pipeline-stat">
+      <span style={{ color }}>{icon}{label}</span>
+      <strong>{value}</strong>
+    </div>
   );
 }
 
@@ -260,7 +300,7 @@ function SortablePipelineCard({ card, column }: { card: PipelineItem; column: Pi
 
   return (
     <article className={isDragging ? "pipeline-card is-dragging" : "pipeline-card"} ref={setNodeRef} style={style}>
-      <PipelineCardContent card={card} dragHandle={<button className="pipeline-drag-handle" aria-label={`Move ${card.title}`} {...attributes} {...listeners}><GripVertical size={14} /></button>} />
+      <PipelineCardContent card={card} dragHandle={<button className="pipeline-drag-handle" aria-label={`Move ${card.title}`} {...attributes} {...listeners}><MoreHorizontal size={15} /></button>} />
     </article>
   );
 }
@@ -274,22 +314,50 @@ function PipelineCardPreview({ card, column }: { card: PipelineItem; column: Pip
 }
 
 function PipelineCardContent({ card, dragHandle }: { card: PipelineItem; dragHandle?: ReactNode }) {
+  const priority = card.priority ?? priorityFromMatch(card.match);
+  const dueDate = card.dueDate ?? dueFromSla(card.sla);
+  const comments = card.comments ?? (card.match >= 90 ? 3 : 2);
+  const subtasks = card.subtasks ?? (card.tag === "Need review" ? 1 : 2);
+
   return (
     <>
       <div className="pipeline-card-top">
-        <div>
-          <strong>{card.title}</strong>
-          <p>{card.person}</p>
+        <strong>{card.title}</strong>
+        <div className="pipeline-card-actions">
+          <b>{card.match}</b>
+          {dragHandle}
         </div>
-        <b>{card.match}</b>
       </div>
-      <div className="pipeline-card-meta">
+
+      <div className="pipeline-detail-grid">
+        <span><Flag size={12} /> Priority <b className={`priority-${priority.toLowerCase()}`}>{priority}</b></span>
+        <span><UserRound size={12} /> Assignee <b>{card.person}</b></span>
+        <span><CalendarDays size={12} /> Due Date <b>{dueDate}</b></span>
+      </div>
+
+      <div className="pipeline-card-footer">
         <span><Clock3 size={12} /> {card.sla}</span>
-        <i>{card.tag}</i>
+        <span>{subtasks} subtasks</span>
+        <span><MessageCircle size={12} /> {comments}</span>
       </div>
-      {dragHandle}
     </>
   );
+}
+
+function priorityFromMatch(match: number): "Low" | "Medium" | "High" {
+  if (match >= 94) return "High";
+  if (match >= 86) return "Medium";
+  return "Low";
+}
+
+function dueFromSla(sla: string) {
+  if (/today/i.test(sla)) return "Today";
+  if (/1/.test(sla)) return "23 May, 2026";
+  if (/2/.test(sla)) return "24 May, 2026";
+  if (/3/.test(sla)) return "25 May, 2026";
+  if (/start/i.test(sla)) return "Start date set";
+  if (/contract/i.test(sla)) return "Signed";
+  return "26 May, 2026";
 }
 
 function movePipelineCard(columns: PipelineColumn[], activeId: string, overId: string) {

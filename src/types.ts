@@ -43,6 +43,10 @@ export type PipelineItem = {
   sla: string;
   tag: string;
   match: number;
+  priority?: "Low" | "Medium" | "High";
+  dueDate?: string;
+  comments?: number;
+  subtasks?: number;
 };
 
 export type PipelineColumn = {
