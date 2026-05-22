@@ -1,0 +1,6 @@
+node_modules
+dist
+*.tsbuildinfo
+*.log
+dashboard-screenshot.png
+reference.png
