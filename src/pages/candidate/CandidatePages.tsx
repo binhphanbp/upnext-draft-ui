@@ -1,8 +1,55 @@
-import { Bot, CalendarClock, CalendarDays, ClipboardCheck, FileCheck2, FileText, Mic, RefreshCw, Target, WandSparkles } from "lucide-react";
-import { jobs } from "../../data";
-import { Field, Metric, PageHeader, PanelHeader, Avatar } from "../../components/ui";
+import {
+  Bell,
+  Bot,
+  Building2,
+  CalendarClock,
+  CalendarDays,
+  CheckCircle2,
+  ClipboardCheck,
+  FileCheck2,
+  FileText,
+  Heart,
+  Lock,
+  Mail,
+  MapPin,
+  Mic,
+  RefreshCw,
+  Search,
+  Settings,
+  ShieldCheck,
+  SlidersHorizontal,
+  Target,
+  TrendingUp,
+  WandSparkles,
+  WalletCards,
+} from "lucide-react";
+import { companies, jobs } from "../../data";
+import { Field, Metric, PageHeader, PanelHeader, Avatar, InsightCard } from "../../components/ui";
 
 const applicationSteps = ["Submitted", "Viewed", "Shortlisted", "Interview", "Offer"];
+const savedJobs = Array.from({ length: 28 }, (_, index) => {
+  const job = jobs[index % jobs.length];
+  return {
+    ...job,
+    savedAt: `${index + 1}d ago`,
+    alert: index % 4 === 0 ? "Salary updated" : index % 3 === 0 ? "Company viewed CV" : "Saved",
+  };
+});
+
+const salaryRows = [
+  ["Frontend Senior", "$2,400", "$3,200", "$4,600", "+18%"],
+  ["Backend Node.js", "$2,100", "$3,000", "$4,200", "+14%"],
+  ["DevOps/SRE", "$2,300", "$3,400", "$5,000", "+21%"],
+  ["QA Automation", "$1,500", "$2,300", "$3,400", "+11%"],
+  ["AI Product Engineer", "$2,800", "$4,100", "$6,200", "+29%"],
+];
+
+const messageThreads = [
+  ["Nexa Fintech", "Confirm technical interview Friday 09:00", "Unread", "9m"],
+  ["CloudBridge Labs", "We reviewed your CV and want a system design call", "Open", "1h"],
+  ["UpNext AI Coach", "Your React Lead CV can improve match by 7%", "Action", "Today"],
+  ["Orbit Commerce", "Thanks for applying. DevOps role moved to shortlist", "Open", "Yesterday"],
+];
 
 export function CandidateProfilePage() {
   return (
@@ -108,6 +155,183 @@ export function CandidateApplicationsPage() {
             </div>
           </section>
         </aside>
+      </div>
+    </>
+  );
+}
+
+export function CandidateSavedJobsPage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Candidate"
+        title="Saved jobs, alerts and quick-apply queue"
+        description="Quản lý job đã lưu, cảnh báo lương/công ty xem CV, nhắc hạn apply và nhóm theo career track."
+        actions={<><button className="secondary-button"><Bell size={15} /> Alert rules</button><button className="primary-button"><Search size={15} /> Find similar jobs</button></>}
+      />
+      <div className="job-market-strip">
+        <InsightCard title="Saved jobs" value="28" icon={Heart} color="#ef4444" note="18 still open, 6 closing this week" />
+        <InsightCard title="Salary alerts" value="7" icon={TrendingUp} color="#2faf72" note="Jobs raised max salary above target" />
+        <InsightCard title="Company views" value="11" icon={Building2} color="#3196ec" note="Employers viewed your default CV" />
+        <InsightCard title="Quick apply ready" value="22" icon={CheckCircle2} color="#7a2cf3" note="CV and cover letter prepared" />
+      </div>
+      <div className="two-column-layout">
+        <section className="panel">
+          <PanelHeader icon={<Heart size={17} />} title="Saved job queue" action="Bulk apply" />
+          <div className="search-strip">
+            <Field label="Track" value="Frontend, Backend, DevOps" />
+            <Field label="Status" value="Open, salary updated, viewed CV" />
+            <Field label="Deadline" value="Closing in 7 days" />
+            <Field label="Location" value="Remote / Hybrid" />
+          </div>
+          <div className="dense-list scroll-list">
+            {savedJobs.map((job, index) => (
+              <article className="job-compact-row" key={`${job.title}-${index}`}>
+                <div className="company-dot">{job.company.charAt(0)}</div>
+                <div>
+                  <strong>{job.title}</strong>
+                  <span>{job.company} • {job.model} • {job.place} • saved {job.savedAt}</span>
+                  <div className="skill-list">{job.tags.map((tag) => <i key={tag}>{tag}</i>)}</div>
+                </div>
+                <div className="row-actions">
+                  <span className={job.alert === "Salary updated" ? "status-pill green" : "status-pill"}>{job.alert}</span>
+                  <button className="primary-button small">Apply</button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+        <aside className="panel">
+          <PanelHeader icon={<SlidersHorizontal size={17} />} title="Saved filters" action="Edit" />
+          {["React remote $3k+", "Fintech frontend lead", "DevOps/SRE hybrid", "AI product engineer"].map((filter, index) => (
+            <div className="mini-row" key={filter}>
+              <Avatar name={filter} index={index} />
+              <div><strong>{filter}</strong><span>{12 + index * 4} new jobs this week</span></div>
+              <button className="status-pill green">On</button>
+            </div>
+          ))}
+        </aside>
+      </div>
+    </>
+  );
+}
+
+export function CandidateCompaniesPage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Candidate"
+        title="Trusted IT companies and employer transparency"
+        description="Theo dõi công ty, trust score, tốc độ phản hồi, review ứng viên, job đang mở và cảnh báo công ty rủi ro."
+        actions={<button className="primary-button"><Building2 size={15} /> Follow companies</button>}
+      />
+      <div className="company-directory-grid">
+        {companies.concat(companies).map((company, index) => (
+          <article className="company-card" key={`${company.name}-${index}`}>
+            <div className="company-card-head">
+              <div className="company-dot">{company.name.charAt(0)}</div>
+              <div><strong>{company.name}</strong><span>{company.field} • {company.followers + index * 73} followers</span></div>
+              <span className={company.trust > 85 ? "status-pill green" : "status-pill yellow"}>Trust {company.trust}</span>
+            </div>
+            <div className="resource-grid compact">
+              <Metric title="Open jobs" value={`${company.jobs + index}`} detail="IT hiring" />
+              <Metric title="Response" value={`${88 - index}%`} detail="within 24h" />
+            </div>
+            <div className="button-row"><button className="secondary-button small"><Heart size={14} /> Follow</button><button className="primary-button small">View jobs</button></div>
+          </article>
+        ))}
+      </div>
+    </>
+  );
+}
+
+export function CandidateSalaryPage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Candidate"
+        title="IT salary guide, skill demand and negotiation helper"
+        description="Benchmark lương theo role, seniority, location, remote/hybrid và kỹ năng để ứng viên đặt expectation thực tế."
+        actions={<><button className="secondary-button"><WalletCards size={15} /> Export benchmark</button><button className="primary-button"><WandSparkles size={15} /> Negotiate with AI</button></>}
+      />
+      <div className="job-market-strip">
+        <InsightCard title="Median senior FE" value="$3.2k" icon={TrendingUp} color="#2faf72" note="HCMC hybrid, 5-7 years" />
+        <InsightCard title="Fastest growth" value="AI Product" icon={WandSparkles} color="#7a2cf3" note="+29% salary demand YoY" />
+        <InsightCard title="Remote premium" value="+12%" icon={MapPin} color="#3196ec" note="Global remote-ready CVs" />
+        <InsightCard title="Negotiation gap" value="$420" icon={WalletCards} color="#f6a311" note="Average accepted uplift" />
+      </div>
+      <section className="panel">
+        <PanelHeader icon={<TrendingUp size={17} />} title="Salary benchmark by IT track" action="Adjust filters" />
+        <div className="benchmark-table">
+          <div className="benchmark-head"><span>Role</span><span>P25</span><span>Median</span><span>P90</span><span>Trend</span></div>
+          {salaryRows.map((row) => (
+            <div className="benchmark-row" key={row[0]}>
+              {row.map((cell, index) => <span className={index === 4 ? "trend" : ""} key={cell}>{cell}</span>)}
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+export function CandidateMessagesPage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Candidate"
+        title="Employer messages, interview invites and AI reminders"
+        description="Tập trung hội thoại với nhà tuyển dụng, trạng thái đã đọc, lịch phỏng vấn và nhắc phản hồi trong SLA."
+        actions={<button className="primary-button"><Mail size={15} /> Compose reply</button>}
+      />
+      <div className="message-layout">
+        <section className="panel">
+          <PanelHeader icon={<Mail size={17} />} title="Inbox" action="Mark all read" />
+          {messageThreads.map(([sender, message, status, time], index) => (
+            <button className={index === 0 ? "message-row selected" : "message-row"} key={sender}>
+              <Avatar name={sender} index={index} />
+              <div><strong>{sender}</strong><span>{message}</span></div>
+              <em>{time}</em>
+              <b className={status === "Unread" ? "status-pill purple" : "status-pill"}>{status}</b>
+            </button>
+          ))}
+        </section>
+        <section className="panel message-thread">
+          <PanelHeader icon={<CalendarClock size={17} />} title="Nexa Fintech thread" action="Attach CV" />
+          <div className="chat-window">
+            <p className="bot">We would like to schedule a technical interview this Friday at 09:00.</p>
+            <p className="user">Friday 09:00 works. Please send calendar invite and interview scope.</p>
+            <p className="bot">Invite sent. Scope: React architecture, performance and fintech dashboard cases.</p>
+          </div>
+          <div className="reply-box"><Field label="Reply draft" value="Thanks, I confirm the interview and will prepare the portfolio links." /><button className="primary-button">Send reply</button></div>
+        </section>
+      </div>
+    </>
+  );
+}
+
+export function CandidateSettingsPage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Candidate settings"
+        title="Privacy, job preferences, notifications and security"
+        description="Kiểm soát dữ liệu hồ sơ, visibility với nhà tuyển dụng, kênh thông báo và quyền kết nối OAuth."
+        actions={<button className="primary-button"><Settings size={15} /> Save changes</button>}
+      />
+      <div className="settings-grid">
+        <section className="panel">
+          <PanelHeader icon={<Target size={17} />} title="Job preferences" action="Reset" />
+          {["Remote preferred", "Salary from $2,500", "Hide current company", "Only verified employers"].map((item, index) => (
+            <div className="setting-row" key={item}><div><strong>{item}</strong><span>{index % 2 ? "Custom preference" : "Recommended for your CV"}</span></div><button className="status-pill green">On</button></div>
+          ))}
+        </section>
+        <section className="panel">
+          <PanelHeader icon={<ShieldCheck size={17} />} title="Privacy & security" action="Open log" />
+          {["Email OTP login", "Google connected", "GitHub connected", "Export profile data"].map((item, index) => (
+            <div className="setting-row" key={item}><div><strong>{item}</strong><span>{index < 3 ? "Active" : "Available on request"}</span></div><Lock size={16} /></div>
+          ))}
+        </section>
       </div>
     </>
   );

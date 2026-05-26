@@ -6,6 +6,7 @@ import {
   ChevronRight,
   CheckCircle2,
   Command,
+  FileText,
   MessageCircle,
   MoreHorizontal,
   Search,
@@ -47,8 +48,57 @@ export function AppShell({ path, navigate, children }: LayoutProps) {
   );
 }
 
+export function CandidateShell({ path, navigate, children }: LayoutProps) {
+  const [pricingOpen, setPricingOpen] = useState(false);
+  const navItems = [
+    ["Việc làm", "/candidate"],
+    ["Tạo CV", "/candidate/profile"],
+    ["Công ty IT", "/candidate/companies"],
+    ["Lương IT", "/candidate/salary"],
+    ["Tin nhắn", "/candidate/messages"],
+  ];
+
+  return (
+    <main className="candidate-site">
+      <header className="candidate-site-header">
+        <button className="candidate-site-logo" onClick={() => navigate("/candidate")} aria-label="UpNext home">
+          <img src={upnextLogo.icon} alt="" />
+          <strong>UPNEXT</strong>
+        </button>
+        <nav className="candidate-site-nav" aria-label="Candidate navigation">
+          {navItems.map(([label, href]) => (
+            <button className={path === href ? "active" : ""} key={href} onClick={() => navigate(href)}>
+              {label}
+              {label === "Việc làm" && <ChevronDown size={14} />}
+            </button>
+          ))}
+          <button onClick={() => setPricingOpen(true)}>UpNext <b>Pro</b></button>
+        </nav>
+        <div className="candidate-site-actions">
+          <button className="candidate-outline" onClick={() => navigate("/register")}>Đăng ký</button>
+          <button className="candidate-solid" onClick={() => navigate("/login")}>Đăng nhập</button>
+          <button className="candidate-employer" onClick={() => navigate("/employer")}>Đăng tuyển & tìm hồ sơ</button>
+        </div>
+      </header>
+      <section className="candidate-public-main">{children}</section>
+      <div className="candidate-floating-stack" aria-label="Quick actions">
+        <button><Bell size={17} /><span>0</span></button>
+        <button><FileText size={17} /></button>
+        <button><MessageCircle size={17} fill="currentColor" /></button>
+      </div>
+      {pricingOpen && <PricingModal onClose={() => setPricingOpen(false)} />}
+    </main>
+  );
+}
+
 function Rail({ path, navigate }: { path: string; navigate: (path: string) => void }) {
-  const shortcuts = ["/candidate", "/employer/candidates", "/employer/pipeline", "/admin/moderation", "/candidate/ai"];
+  const activeRole = roleFromPath(path);
+  const shortcuts =
+    activeRole === "admin"
+      ? ["/admin", "/admin/moderation", "/admin/roles", "/admin/audit"]
+      : activeRole === "employer"
+        ? ["/employer", "/employer/candidates", "/employer/pipeline", "/employer/interviews", "/employer/analytics"]
+        : ["/candidate", "/candidate/saved", "/candidate/messages", "/candidate/ai", "/candidate/settings"];
   return (
     <aside className="rail">
       <button className="rail-logo" onClick={() => navigate("/login")} aria-label="Auth">
@@ -90,6 +140,7 @@ function Sidebar({
   onUpgrade: () => void;
 }) {
   const visibleRoutes = routes.filter((route) => route.role === "access" || route.role === activeRole);
+  const switcherRoles = activeRole === "admin" ? (["admin"] as Role[]) : (["candidate", "employer"] as Role[]);
 
   return (
     <aside className="sidebar">
@@ -98,7 +149,7 @@ function Sidebar({
         <Command size={15} />
       </div>
       <div className="workspace-switcher">
-        {(["candidate", "employer", "admin"] as Role[]).map((role) => (
+        {switcherRoles.map((role) => (
           <button className={activeRole === role ? "active" : ""} key={role} onClick={() => navigate(roleHome[role])}>
             {role === "candidate" ? "Candidate" : role === "employer" ? "Recruiter" : "Admin"}
           </button>

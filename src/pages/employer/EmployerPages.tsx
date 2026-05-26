@@ -15,7 +15,29 @@ import {
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { BadgeCheck, BriefcaseBusiness, CalendarClock, CalendarDays, Clock3, FileText, Filter, GripVertical, Heart, Mail, PenLine, ShieldCheck, Sparkles, Star, UsersRound, WandSparkles } from "lucide-react";
+import {
+  BadgeCheck,
+  BriefcaseBusiness,
+  Building2,
+  CalendarClock,
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  FileText,
+  Filter,
+  GripVertical,
+  Heart,
+  Mail,
+  PenLine,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sparkles,
+  Star,
+  UserCog,
+  UsersRound,
+  Video,
+  WandSparkles,
+} from "lucide-react";
 import { applicantTrend, candidates, chartBars, pipelineSeed, posts } from "../../data";
 import type { Candidate, PipelineColumn, PipelineItem } from "../../types";
 import { AuthNotice, Avatar, ChartTooltip, Field, InsightCard, Metric, Modal, PageHeader, PanelHeader, ScoreRing } from "../../components/ui";
@@ -91,9 +113,9 @@ export function EmployerJobsPage() {
           {posts.map((post) => (
             <div className="post-row" key={post.title}>
               <div><strong>{post.title}</strong><span>{post.views} views • {post.cvs} CVs</span></div>
-              <span className={post.status === "Locked" ? "status-pill red" : post.status === "Boosting" ? "status-pill purple" : "status-pill green"}>{post.status}</span>
+              <span className={post.status === "Locked" ? "status-pill red" : post.status === "Boosting" ? "status-pill purple" : post.status === "Expired" || post.status === "Review" ? "status-pill yellow" : "status-pill green"}>{post.status}</span>
               <span>{post.expiry}</span>
-              <button className="secondary-button small">{post.status === "Expired" ? "Renew" : "Boost"}</button>
+              <button className="secondary-button small">{post.status === "Expired" ? "Renew" : post.status === "Review" ? "Resolve" : "Boost"}</button>
             </div>
           ))}
         </section>
@@ -345,6 +367,145 @@ export function EmployerCompanyPage() {
     <>
       <PageHeader eyebrow="Employer" title="Company profile, trust score and subscription" description="Bổ sung xác thực để tăng điểm uy tín, theo dõi gói dịch vụ, tài nguyên và hóa đơn." actions={<button className="primary-button"><BadgeCheck size={15} /> Verify company</button>} />
       <div className="company-grid"><TrustPanel wide /><section className="panel"><PanelHeader icon={<ShieldCheck size={17} />} title="Company profile" action="Edit" /><div className="field-table">{["Business license: Verified", "Tax code: 0318 884 209", "Address: 12 Nguyen Hue, District 1", "Response SLA: 88% within 24h"].map((item) => <p key={item}>{item}</p>)}</div></section></div>
+    </>
+  );
+}
+
+export function EmployerTalentPoolPage() {
+  const pool = Array.from({ length: 20 }, (_, index) => candidates[index % candidates.length]);
+  return (
+    <>
+      <PageHeader
+        eyebrow="Employer"
+        title="Talent pool, saved candidates and nurture campaigns"
+        description="Lưu ứng viên tiềm năng theo tag, consent, salary, availability và chiến dịch email nuôi dưỡng cho đợt tuyển dụng sau."
+        actions={<><button className="secondary-button"><Mail size={15} /> Nurture campaign</button><button className="primary-button"><Heart size={15} /> Add to pool</button></>}
+      />
+      <div className="recruiter-summary-strip">
+        <InsightCard title="Saved candidates" value="342" icon={Heart} color="#2faf72" note="128 warm, 46 ready now" />
+        <InsightCard title="Consent ready" value="91%" icon={ShieldCheck} color="#3196ec" note="GDPR-style contact permission" />
+        <InsightCard title="Hot skills" value="React, K8s" icon={Sparkles} color="#7a2cf3" note="Most requested in active jobs" />
+        <InsightCard title="Campaign reply" value="28%" icon={Mail} color="#f6a311" note="Last 30 days outreach" />
+      </div>
+      <div className="two-column-layout">
+        <section className="panel">
+          <PanelHeader icon={<UsersRound size={17} />} title="Talent pool table" action="Bulk tag" />
+          <div className="dense-list scroll-list">
+            {pool.map((candidate, index) => (
+              <div className="talent-row" key={`${candidate.name}-${index}`}>
+                <Avatar name={candidate.name} index={index} />
+                <div><strong>{candidate.name}</strong><span>{candidate.role} • {candidate.exp} • {candidate.salary}</span></div>
+                <div className="skill-list">{candidate.skills.slice(0, 2).map((skill) => <i key={skill}>{skill}</i>)}</div>
+                <span className={candidate.match > 90 ? "status-pill green" : "status-pill"}>{candidate.match} match</span>
+                <button className="secondary-button small">Open</button>
+              </div>
+            ))}
+          </div>
+        </section>
+        <aside className="panel">
+          <PanelHeader icon={<WandSparkles size={17} />} title="Nurture automation" action="Configure" />
+          {["Send salary update to React pool", "Re-engage candidates viewed by hiring manager", "Invite DevOps candidates to webinar", "Auto-stop after 2 no-replies"].map((item) => (
+            <div className="check-row" key={item}><CheckCircle2 size={15} /><span>{item}</span></div>
+          ))}
+        </aside>
+      </div>
+    </>
+  );
+}
+
+export function EmployerInterviewsPage() {
+  const slots = ["Mon 09:00 - Backend system design", "Tue 14:00 - Frontend architecture", "Wed 10:30 - Culture fit", "Thu 15:00 - Offer discussion", "Fri 09:00 - Technical loop 2"];
+  return (
+    <>
+      <PageHeader
+        eyebrow="Employer"
+        title="Interview calendar, loops and candidate replies"
+        description="Quản lý lịch phỏng vấn, giới hạn 2 vòng hẹn lại, trạng thái calendar sync, feedback rubric và email nhắc tự động."
+        actions={<button className="primary-button"><CalendarClock size={15} /> Schedule interview</button>}
+      />
+      <div className="interview-board">
+        <section className="panel">
+          <PanelHeader icon={<CalendarDays size={17} />} title="This week schedule" action="Calendar view" />
+          {slots.map((slot, index) => (
+            <div className="interview-slot" key={slot}>
+              <div className="date-chip"><span>{["Mon", "Tue", "Wed", "Thu", "Fri"][index]}</span><b>{22 + index}</b></div>
+              <div><strong>{slot}</strong><span>{candidates[index % candidates.length].name} • Loop {index % 2 + 1}/2</span></div>
+              <span className={index % 2 ? "status-pill yellow" : "status-pill green"}>{index % 2 ? "Waiting" : "Confirmed"}</span>
+            </div>
+          ))}
+        </section>
+        <section className="panel">
+          <PanelHeader icon={<Video size={17} />} title="Feedback rubric" action="Edit" />
+          <div className="resource-grid">
+            <Metric title="Technical" value="40%" detail="Architecture, code depth" />
+            <Metric title="Product" value="25%" detail="Domain, impact" />
+            <Metric title="Communication" value="20%" detail="Clarity, tradeoffs" />
+            <Metric title="Culture" value="15%" detail="Team fit" />
+          </div>
+          <AuthNotice>Candidate chỉ được đề xuất lịch khác một lần. Nếu nhà tuyển dụng gửi lại quá 2 vòng, hệ thống yêu cầu lý do.</AuthNotice>
+        </section>
+      </div>
+    </>
+  );
+}
+
+export function EmployerTeamPage() {
+  const members = ["Tran Hoang Lan - Owner", "Nguyen My Anh - Recruiter", "Le Quang Huy - Hiring Manager", "Pham Linh - Finance"];
+  return (
+    <>
+      <PageHeader
+        eyebrow="Employer"
+        title="Team members, hiring roles and approval workflow"
+        description="Phân quyền recruiter, hiring manager, finance; kiểm soát ai được xem CV, gửi offer, mua gói và khóa tin tuyển dụng."
+        actions={<button className="primary-button"><UserCog size={15} /> Invite member</button>}
+      />
+      <div className="team-grid">
+        <section className="panel">
+          <PanelHeader icon={<UsersRound size={17} />} title="Members" action="Manage seats" />
+          {members.map((member, index) => (
+            <div className="mini-row" key={member}>
+              <Avatar name={member} index={index} />
+              <div><strong>{member}</strong><span>{index === 0 ? "All permissions" : index === 3 ? "Billing only" : "Recruitment workspace"}</span></div>
+              <span className="status-pill green">Active</span>
+            </div>
+          ))}
+        </section>
+        <section className="panel">
+          <PanelHeader icon={<ShieldCheck size={17} />} title="Permission sets" action="Edit" />
+          {["View CV", "Move pipeline", "Schedule interview", "Send offer", "Billing management", "Company verification"].map((permission, index) => (
+            <div className="permission-row" key={permission}><span>{permission}</span><b>{index < 3 ? "Recruiter" : index === 4 ? "Finance" : "Owner"}</b></div>
+          ))}
+        </section>
+      </div>
+    </>
+  );
+}
+
+export function EmployerAnalyticsPage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Employer"
+        title="Recruitment analytics, funnel quality and source ROI"
+        description="Đo hiệu quả từng nguồn ứng viên, conversion theo stage, SLA xử lý, cost per hire và chất lượng match."
+        actions={<><button className="secondary-button">Export CSV</button><button className="primary-button"><SlidersHorizontal size={15} /> Build report</button></>}
+      />
+      <div className="admin-kpi-grid">
+        <InsightCard title="Apply -> shortlist" value="36%" icon={UsersRound} color="#3196ec" note="+8% vs last month" />
+        <InsightCard title="Interview pass" value="42%" icon={CalendarClock} color="#7a2cf3" note="Best source: referrals" />
+        <InsightCard title="Time to hire" value="18d" icon={Clock3} color="#f6a311" note="Target 21 days" />
+        <InsightCard title="Cost per hire" value="$418" icon={BriefcaseBusiness} color="#2faf72" note="Ads + AI credits" />
+      </div>
+      <div className="dashboard-grid">
+        <ApplicationsPanel />
+        <section className="panel">
+          <PanelHeader icon={<Building2 size={17} />} title="Source performance" action="Details" />
+          {["UpNext AI match - 46 hires", "LinkedIn import - 12 hires", "Referral - 8 hires", "Career site - 6 hires"].map((source, index) => (
+            <div className="mini-row" key={source}><Avatar name={source} index={index} /><div><strong>{source}</strong><span>Quality score {92 - index * 7}</span></div></div>
+          ))}
+        </section>
+        <AiOperationsPanel />
+      </div>
     </>
   );
 }

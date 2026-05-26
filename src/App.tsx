@@ -1,17 +1,38 @@
 import { useEffect, useState } from "react";
-import { AppShell } from "./components/layout";
+import { AppShell, CandidateShell } from "./components/layout";
 import { normalizePath } from "./routes";
 import { AuthPage } from "./pages/AuthPage";
 import { CandidateHomePage } from "./pages/candidate/CandidateHomePage";
-import { CandidateAiPage, CandidateApplicationsPage, CandidateProfilePage } from "./pages/candidate/CandidatePages";
 import {
+  CandidateAiPage,
+  CandidateApplicationsPage,
+  CandidateCompaniesPage,
+  CandidateMessagesPage,
+  CandidateProfilePage,
+  CandidateSalaryPage,
+  CandidateSavedJobsPage,
+  CandidateSettingsPage,
+} from "./pages/candidate/CandidatePages";
+import {
+  EmployerAnalyticsPage,
   EmployerCandidatesPage,
   EmployerCompanyPage,
   EmployerDashboardPage,
+  EmployerInterviewsPage,
   EmployerJobsPage,
   EmployerPipelinePage,
+  EmployerTalentPoolPage,
+  EmployerTeamPage,
 } from "./pages/employer/EmployerPages";
-import { AdminDashboardPage, AdminModerationPage, AdminUsersFinancePage } from "./pages/admin/AdminPages";
+import {
+  AdminAuditPage,
+  AdminDashboardPage,
+  AdminModerationPage,
+  AdminRolesPage,
+  AdminSalesPage,
+  AdminSeoPage,
+  AdminUsersFinancePage,
+} from "./pages/admin/AdminPages";
 
 export function App() {
   const [path, setPath] = useState(() => {
@@ -21,14 +42,27 @@ export function App() {
       "candidate-profile": "/candidate/profile",
       "candidate-applications": "/candidate/applications",
       "candidate-ai": "/candidate/ai",
+      "candidate-saved": "/candidate/saved",
+      "candidate-companies": "/candidate/companies",
+      "candidate-salary": "/candidate/salary",
+      "candidate-messages": "/candidate/messages",
+      "candidate-settings": "/candidate/settings",
       "employer-dashboard": "/employer",
       "employer-jobs": "/employer/jobs",
       "employer-candidates": "/employer/candidates",
+      "employer-talent-pool": "/employer/talent-pool",
       "employer-pipeline": "/employer/pipeline",
+      "employer-interviews": "/employer/interviews",
+      "employer-team": "/employer/team",
+      "employer-analytics": "/employer/analytics",
       "employer-company": "/employer/company",
       "admin-dashboard": "/admin",
       "admin-moderation": "/admin/moderation",
       "admin-users-finance": "/admin/users-finance",
+      "admin-roles": "/admin/roles",
+      "admin-seo": "/admin/seo",
+      "admin-sales": "/admin/sales",
+      "admin-audit": "/admin/audit",
       gateway: "/login",
     };
     return normalizePath(legacyPage ? legacyMap[legacyPage] ?? window.location.pathname : window.location.pathname);
@@ -50,6 +84,14 @@ export function App() {
     return <AuthPage initialMode={path === "/register" ? "register" : "login"} navigate={navigate} />;
   }
 
+  if (path.startsWith("/candidate") || path === "/") {
+    return (
+      <CandidateShell path={path} navigate={navigate}>
+        <RouteSwitch path={path} navigate={navigate} />
+      </CandidateShell>
+    );
+  }
+
   return (
     <AppShell path={path} navigate={navigate}>
       <RouteSwitch path={path} navigate={navigate} />
@@ -65,16 +107,34 @@ function RouteSwitch({ path, navigate }: { path: string; navigate: (path: string
       return <CandidateProfilePage />;
     case "/candidate/applications":
       return <CandidateApplicationsPage />;
+    case "/candidate/saved":
+      return <CandidateSavedJobsPage />;
+    case "/candidate/companies":
+      return <CandidateCompaniesPage />;
+    case "/candidate/salary":
+      return <CandidateSalaryPage />;
+    case "/candidate/messages":
+      return <CandidateMessagesPage />;
     case "/candidate/ai":
       return <CandidateAiPage />;
+    case "/candidate/settings":
+      return <CandidateSettingsPage />;
     case "/employer":
       return <EmployerDashboardPage />;
     case "/employer/jobs":
       return <EmployerJobsPage />;
     case "/employer/candidates":
       return <EmployerCandidatesPage />;
+    case "/employer/talent-pool":
+      return <EmployerTalentPoolPage />;
     case "/employer/pipeline":
       return <EmployerPipelinePage />;
+    case "/employer/interviews":
+      return <EmployerInterviewsPage />;
+    case "/employer/team":
+      return <EmployerTeamPage />;
+    case "/employer/analytics":
+      return <EmployerAnalyticsPage />;
     case "/employer/company":
       return <EmployerCompanyPage />;
     case "/admin":
@@ -83,6 +143,14 @@ function RouteSwitch({ path, navigate }: { path: string; navigate: (path: string
       return <AdminModerationPage />;
     case "/admin/users-finance":
       return <AdminUsersFinancePage />;
+    case "/admin/roles":
+      return <AdminRolesPage />;
+    case "/admin/seo":
+      return <AdminSeoPage />;
+    case "/admin/sales":
+      return <AdminSalesPage />;
+    case "/admin/audit":
+      return <AdminAuditPage />;
     default:
       return <CandidateHomePage navigate={navigate} />;
   }
