@@ -26,8 +26,6 @@ import {
   WandSparkles,
   Zap,
 } from "lucide-react";
-import heroVisual from "../../../template/aDgetdiMZltlZ3SLjFF5d3ZCPQ.avif";
-import marketVisual from "../../../template/g01V5mrr7Qayz7kuNycPvNae4Q.avif";
 import { companies, jobs } from "../../data";
 import { ChartTooltip, Modal, ScoreRing } from "../../components/ui";
 import type { Job } from "../../types";
@@ -103,7 +101,16 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
                   <p>AI match CV với JD, gợi ý mức lương, cảnh báo công ty uy tín và theo dõi lịch phỏng vấn.</p>
                   <button onClick={() => navigate("/candidate/profile")}><FileText size={15} /> Tạo CV chuẩn IT</button>
                 </div>
-                <img src={heroVisual} alt="" />
+                <div className="candidate-hero-visual" aria-hidden="true">
+                  <div className="visual-window">
+                    <div className="visual-toolbar"><span /><span /><span /></div>
+                    <div className="visual-kpis"><i /><i /><i /></div>
+                    <div className="visual-bars">
+                      {[54, 72, 44, 86, 61, 93, 70].map((height) => <span style={{ height: `${height}%` }} key={height} />)}
+                    </div>
+                    <div className="visual-list"><b /><b /><b /></div>
+                  </div>
+                </div>
               </article>
 
               <article className="market-ticker">
@@ -153,7 +160,11 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
         <div className="candidate-market-dashboard">
           <div className="market-left">
             <h2>Thị trường IT hôm nay <span>22/05/2026</span></h2>
-            <img src={marketVisual} alt="" />
+            <div className="market-bot-visual" aria-hidden="true">
+              <Sparkles size={26} />
+              <strong>AI</strong>
+              <span>54.830 jobs</span>
+            </div>
             <div className="fresh-jobs">
               {jobs.slice(0, 3).map((job) => (
                 <button key={job.title} onClick={() => setSelectedJob(job)}>
