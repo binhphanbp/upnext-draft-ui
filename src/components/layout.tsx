@@ -31,6 +31,7 @@ type LayoutProps = {
 export function AppShell({ path, navigate, children }: LayoutProps) {
   const activeRoute = routes.find((route) => route.path === path) ?? routes.find((route) => route.path === "/candidate");
   const activeRole = roleFromPath(path);
+  const topbarTitle = path.startsWith("/employer/checkout") ? "Thanh toán gói" : activeRoute?.label ?? "UpNext";
   const [pricingOpen, setPricingOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -45,13 +46,13 @@ export function AppShell({ path, navigate, children }: LayoutProps) {
         onUpgrade={() => setPricingOpen(true)}
       />
       <section className="workspace">
-        <TopBar title={activeRoute?.label ?? "UpNext"} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
+        <TopBar title={topbarTitle} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
         <section className="page-scroll">{children}</section>
       </section>
       <button className="chat-fab" aria-label="Mở trợ lý">
         <MessageCircle size={22} fill="currentColor" />
       </button>
-      {pricingOpen && <PricingModal onClose={() => setPricingOpen(false)} />}
+      {pricingOpen && <PricingModal navigate={navigate} onClose={() => setPricingOpen(false)} />}
     </main>
   );
 }
@@ -94,7 +95,7 @@ export function CandidateShell({ path, navigate, children }: LayoutProps) {
         <button><FileText size={17} /></button>
         <button><MessageCircle size={17} fill="currentColor" /></button>
       </div>
-      {pricingOpen && <PricingModal onClose={() => setPricingOpen(false)} />}
+      {pricingOpen && <PricingModal navigate={navigate} onClose={() => setPricingOpen(false)} />}
     </main>
   );
 }
@@ -197,6 +198,7 @@ function TopBar({ title, activeRole, navigate, onUpgrade }: { title: string; act
 
 const pricingPlans = [
   {
+    slug: "trial",
     name: "Dùng thử",
     icon: ShieldCheck,
     description: "Dành cho đội mới thử quy trình tuyển dụng có AI.",
@@ -206,24 +208,29 @@ const pricingPlans = [
     features: ["CRM theo dõi ứng viên", "1 tin tuyển dụng đang chạy", "Parse CV", "Báo cáo tuyển dụng cơ bản"],
   },
   {
+    slug: "starter",
     name: "Khởi đầu",
     icon: Sparkles,
     description: "Cho startup cần đăng tin và lọc CV ổn định.",
     price: "$49",
     cadence: "/tháng",
+    monthlyPrice: 49,
     features: ["5 tin tuyển dụng đang chạy", "300 lượt parse CV", "3 thành viên", "10 bản ghi phỏng vấn AI"],
   },
   {
+    slug: "growth",
     name: "Tăng trưởng",
     icon: TrendingUp,
     badge: "Phổ biến",
     description: "Gói phù hợp nhất cho đội tuyển dụng IT đang scale.",
     price: "$149",
     cadence: "/tháng",
+    monthlyPrice: 149,
     featured: true,
     features: ["30 tin tuyển dụng đang chạy", "2.000 lượt AI match", "Tự động hóa Pipeline", "Đồng bộ lịch Google/Outlook"],
   },
   {
+    slug: "enterprise",
     name: "Doanh nghiệp",
     icon: Building2,
     description: "Cho công ty cần SLA, phân quyền và thanh toán riêng.",
@@ -234,7 +241,10 @@ const pricingPlans = [
   },
 ];
 
-function PricingModal({ onClose }: { onClose: () => void }) {
+function PricingModal({ navigate, onClose }: { navigate: (path: string) => void; onClose: () => void }) {
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const isYearly = billingCycle === "yearly";
+
   return (
     <div className="pricing-backdrop" role="presentation" onMouseDown={onClose}>
       <section className="pricing-modal" role="dialog" aria-modal="true" aria-label="Bảng giá nâng cấp" onMouseDown={(event) => event.stopPropagation()}>
@@ -246,15 +256,28 @@ function PricingModal({ onClose }: { onClose: () => void }) {
           <h2>Gói rõ ràng, không phí ẩn</h2>
           <p>Chọn gói phù hợp cho ứng viên, nhà tuyển dụng hoặc đội vận hành tuyển dụng IT.</p>
           <div className="billing-toggle" aria-label="Chu kỳ thanh toán">
-            <button className="active">Hàng tháng</button>
-            <button>Hàng năm <b>Tiết kiệm 20%</b></button>
+            <button className={billingCycle === "monthly" ? "active" : ""} aria-pressed={billingCycle === "monthly"} onClick={() => setBillingCycle("monthly")}>
+              Hàng tháng
+            </button>
+            <button className={billingCycle === "yearly" ? "active" : ""} aria-pressed={billingCycle === "yearly"} onClick={() => setBillingCycle("yearly")}>
+              Hàng năm <b>Tiết kiệm 20%</b>
+            </button>
           </div>
         </header>
         <div className="pricing-grid">
           {pricingPlans.map((plan) => {
             const Icon = plan.icon;
             const ctaClass = plan.current ? "pricing-cta current" : plan.featured ? "pricing-cta featured" : plan.enterprise ? "pricing-cta consult" : "pricing-cta";
-            const cardClass = ["pricing-card", plan.featured ? "featured" : "", plan.enterprise ? "enterprise" : ""].filter(Boolean).join(" ");
+            const monthlyPrice = "monthlyPrice" in plan ? plan.monthlyPrice : undefined;
+            const cardClass = ["pricing-card", plan.featured ? "featured" : "", plan.enterprise ? "enterprise" : "", isYearly && monthlyPrice ? "yearly" : ""].filter(Boolean).join(" ");
+            const annualMonthlyPrice = monthlyPrice ? Math.floor(monthlyPrice * 0.8) : undefined;
+            const annualTotal = monthlyPrice ? Math.round(monthlyPrice * 12 * 0.8) : undefined;
+            const annualSaving = monthlyPrice && annualTotal ? monthlyPrice * 12 - annualTotal : undefined;
+            const displayPrice = isYearly && annualTotal ? `$${annualTotal.toLocaleString("en-US")}` : plan.price;
+            const displayCadence = isYearly && annualTotal ? "/năm" : plan.cadence;
+            const priceNote = isYearly && annualMonthlyPrice && annualSaving
+              ? `≈ $${annualMonthlyPrice}/tháng · tiết kiệm $${annualSaving.toLocaleString("en-US")}/năm`
+              : "";
             return (
               <article className={cardClass} key={plan.name}>
                 <div className="pricing-card-head">
@@ -265,8 +288,19 @@ function PricingModal({ onClose }: { onClose: () => void }) {
                   <span className="plan-icon"><Icon size={21} /></span>
                 </div>
                 <div className="pricing-price">
-                  <strong>{plan.price}<small>{plan.cadence}</small></strong>
-                  <button className={ctaClass}>
+                  <div className="pricing-price-copy">
+                    <strong>{displayPrice}<small>{displayCadence}</small></strong>
+                    {priceNote && <span className="pricing-price-note">{priceNote}</span>}
+                  </div>
+                  <button
+                    className={ctaClass}
+                    disabled={plan.current}
+                    onClick={() => {
+                      if (plan.current) return;
+                      onClose();
+                      navigate(`/employer/checkout/${plan.slug}/${billingCycle}`);
+                    }}
+                  >
                     {plan.current ? "Gói hiện tại" : plan.enterprise ? "Đặt lịch tư vấn" : "Nâng cấp"}
                   </button>
                 </div>
@@ -282,7 +316,7 @@ function PricingModal({ onClose }: { onClose: () => void }) {
         </div>
         <footer className="pricing-note">
           <CheckCircle2 size={15} />
-          Không tính phí ẩn. Có thể đổi gói hoặc hủy gia hạn ở trang Công ty & thanh toán.
+          Gói chỉ kích hoạt sau khi thanh toán thành công qua SePay hoặc Stripe. Hóa đơn hiển thị trong Công ty & thanh toán.
         </footer>
       </section>
     </div>

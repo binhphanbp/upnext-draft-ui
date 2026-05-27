@@ -24,6 +24,7 @@ import {
   EmployerTalentPoolPage,
   EmployerTeamPage,
 } from "./pages/employer/EmployerPages";
+import { EmployerCheckoutPage } from "./pages/employer/EmployerCheckoutPage";
 import {
   AdminAuditPage,
   AdminDashboardPage,
@@ -100,6 +101,10 @@ export function App() {
 }
 
 function RouteSwitch({ path, navigate }: { path: string; navigate: (path: string) => void }) {
+  if (path.startsWith("/employer/checkout")) {
+    return <EmployerCheckoutPage path={path} navigate={navigate} />;
+  }
+
   switch (path) {
     case "/candidate":
       return <CandidateHomePage navigate={navigate} />;
