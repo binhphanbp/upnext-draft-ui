@@ -89,6 +89,10 @@
   --color-action-premium-active: var(--color-indigo-800);
   --color-action-premium-subtle: var(--color-indigo-50);
   --color-action-premium-text: var(--color-indigo-700);
+  --color-pricing-card-background: color-mix(in srgb, var(--color-indigo-50) 42%, var(--color-slate-50));
+  --color-pricing-card-border: color-mix(in srgb, var(--color-indigo-200) 52%, var(--color-slate-200));
+  --color-pricing-feature-background: var(--color-slate-0);
+  --color-pricing-feature-border: color-mix(in srgb, var(--color-indigo-100) 42%, var(--color-slate-200));
   --color-success-default: var(--color-green-500);
   --color-success-subtle: var(--color-green-50);
   --color-success-text: var(--color-green-700);
@@ -166,6 +170,10 @@
   --color-action-premium-active: var(--color-indigo-200);
   --color-action-premium-subtle: #25205f;
   --color-action-premium-text: var(--color-indigo-200);
+  --color-pricing-card-background: color-mix(in srgb, var(--color-indigo-950) 42%, var(--color-slate-900));
+  --color-pricing-card-border: color-mix(in srgb, var(--color-indigo-700) 48%, var(--color-slate-700));
+  --color-pricing-feature-background: var(--color-slate-900);
+  --color-pricing-feature-border: color-mix(in srgb, var(--color-indigo-800) 42%, var(--color-slate-700));
   --color-success-default: var(--color-green-500);
   --color-success-subtle: #052e22;
   --color-success-text: #86efac;
@@ -721,7 +729,7 @@ input:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #171923;
+  color: var(--color-action-premium-text);
   font-size: 12px;
   font-weight: 900;
 }
@@ -729,7 +737,7 @@ input:focus-visible {
 .pricing-header span svg {
   color: #ffffff;
   padding: 2px;
-  background: #ff8a00;
+  background: var(--color-action-premium-default);
   border-radius: 4px;
 }
 
@@ -753,8 +761,8 @@ input:focus-visible {
   gap: 4px;
   margin-top: 17px;
   padding: 4px;
-  background: #f0eff6;
-  border: 1px solid #e3e3ec;
+  background: var(--color-action-premium-subtle);
+  border: 1px solid var(--color-indigo-100);
   border-radius: 999px;
 }
 
@@ -770,9 +778,9 @@ input:focus-visible {
 }
 
 .billing-toggle button.active {
-  color: #151822;
+  color: var(--color-action-premium-text);
   background: #ffffff;
-  box-shadow: 0 1px 4px rgba(20, 24, 42, 0.1);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-action-premium-default) 14%, transparent);
 }
 
 .billing-toggle b {
@@ -796,15 +804,16 @@ input:focus-visible {
   grid-template-rows: auto auto 1fr;
   min-height: 344px;
   padding: 14px;
-  background: #f7f6fb;
-  border: 1px solid #e7e7ef;
+  background: var(--color-pricing-card-background);
+  border: 1px solid var(--color-pricing-card-border);
   border-radius: 11px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .pricing-card.featured {
   background: linear-gradient(180deg, #f2ebff, #ffffff);
   border-color: rgba(122, 44, 243, 0.3);
-  box-shadow: 0 12px 28px rgba(122, 44, 243, 0.12);
+  box-shadow: 0 16px 34px rgba(122, 44, 243, 0.17);
 }
 
 .pricing-card-head {
@@ -851,6 +860,11 @@ input:focus-visible {
   box-shadow: 0 1px 4px rgba(20, 24, 42, 0.05);
 }
 
+.pricing-card:not(.featured) .plan-icon {
+  background: var(--color-action-premium-subtle);
+  border-color: var(--color-indigo-200);
+}
+
 .pricing-price {
   display: flex;
   align-items: center;
@@ -858,7 +872,7 @@ input:focus-visible {
   gap: 10px;
   margin: 13px 0 13px;
   padding-top: 13px;
-  border-top: 1px solid #e6e6ee;
+  border-top: 1px solid var(--color-slate-200);
 }
 
 .pricing-price strong {
@@ -874,20 +888,70 @@ input:focus-visible {
   font-weight: 700;
 }
 
-.pricing-price .primary-button,
-.pricing-price .secondary-button,
-.pricing-price .upgrade {
+.pricing-cta {
   height: 34px;
   min-width: 100px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  padding: 0 13px;
+  font-size: 12px;
+  font-weight: 850;
   white-space: nowrap;
+  border-radius: 8px;
+}
+
+.pricing-cta {
+  color: var(--color-action-premium-text);
+  background: #ffffff;
+  border: 1px solid var(--color-indigo-200);
+  box-shadow: 0 1px 3px rgba(20, 24, 42, 0.04);
+}
+
+.pricing-cta:hover {
+  color: var(--color-action-premium-hover);
+  border-color: var(--color-action-premium-default);
+  background: var(--color-action-premium-subtle);
+}
+
+.pricing-cta.featured {
+  color: #ffffff;
+  background: var(--color-action-premium-default);
+  border-color: var(--color-action-premium-hover);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--color-action-premium-default) 24%, transparent);
+}
+
+.pricing-cta.featured:hover {
+  background: var(--color-action-premium-hover);
+  border-color: var(--color-action-premium-active);
+}
+
+.pricing-cta.current {
+  color: var(--color-text-secondary);
+  background: #ffffff;
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+  cursor: default;
+}
+
+.pricing-cta.consult {
+  color: var(--color-text-primary);
+  background: #ffffff;
+  border-color: var(--color-border-default);
+}
+
+.pricing-cta.consult:hover {
+  color: var(--color-action-premium-text);
+  border-color: var(--color-indigo-300);
+  background: var(--color-action-premium-subtle);
 }
 
 .pricing-features {
   padding: 14px;
-  background: #ffffff;
-  border: 1px solid #eeeef4;
+  background: var(--color-pricing-feature-background);
+  border: 1px solid var(--color-pricing-feature-border);
   border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
 .pricing-features > span {
@@ -1027,17 +1091,6 @@ input:focus-visible {
 .primary-button:hover {
   background: var(--color-action-primary-hover);
   border-color: var(--color-action-primary-active);
-}
-
-.pricing-price .primary-button {
-  background: var(--color-action-premium-default);
-  border-color: var(--color-action-premium-hover);
-  box-shadow: 0 6px 14px color-mix(in srgb, var(--color-action-premium-default) 22%, transparent);
-}
-
-.pricing-price .primary-button:hover {
-  background: var(--color-action-premium-hover);
-  border-color: var(--color-action-premium-active);
 }
 
 .secondary-button,

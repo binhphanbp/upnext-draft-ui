@@ -251,6 +251,7 @@ function PricingModal({ onClose }: { onClose: () => void }) {
         <div className="pricing-grid">
           {pricingPlans.map((plan) => {
             const Icon = plan.icon;
+            const ctaClass = plan.current ? "pricing-cta current" : plan.featured ? "pricing-cta featured" : plan.name === "Doanh nghiệp" ? "pricing-cta consult" : "pricing-cta";
             return (
               <article className={plan.featured ? "pricing-card featured" : "pricing-card"} key={plan.name}>
                 <div className="pricing-card-head">
@@ -262,7 +263,7 @@ function PricingModal({ onClose }: { onClose: () => void }) {
                 </div>
                 <div className="pricing-price">
                   <strong>{plan.price}<small>{plan.cadence}</small></strong>
-                  <button className={plan.current ? "secondary-button" : plan.featured ? "primary-button" : "upgrade"}>
+                  <button className={ctaClass}>
                     {plan.current ? "Gói hiện tại" : plan.name === "Doanh nghiệp" ? "Đặt lịch tư vấn" : "Nâng cấp"}
                   </button>
                 </div>
