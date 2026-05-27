@@ -80,7 +80,7 @@ export function AuthPage({
       <section className="auth-brand-panel">
         <button className="auth-back" onClick={() => navigate("/candidate")}>
           <ArrowLeft size={16} />
-          Back to jobs
+          Về trang việc làm
         </button>
 
         <div className="auth-logo">
@@ -88,25 +88,25 @@ export function AuthPage({
         </div>
 
         <div className="auth-hero-copy">
-          <span className="eyebrow">Passwordless IT recruitment</span>
+          <span className="eyebrow">Xác thực không mật khẩu cho tuyển dụng IT</span>
           <h1>{isLogin ? "Đăng nhập nhanh bằng mã email" : "Tạo tài khoản tuyển dụng đáng tin cậy"}</h1>
           <p>
             {isLogin
-              ? "UpNext dùng Email OTP một lần để xác thực. Không mật khẩu, toàn bộ xác thực ở cùng một màn hình và vào đúng workspace theo vai trò."
-              : "Candidate có thể tạo hồ sơ tìm việc ngay. Nhà tuyển dụng cần email công ty và thông tin xác thực trước khi đăng tin."}
+              ? "UpNext dùng Email OTP một lần để xác thực. Không mật khẩu, toàn bộ xác thực ở cùng một màn hình và vào đúng không gian làm việc theo vai trò."
+              : "Ứng viên có thể tạo hồ sơ tìm việc ngay. Nhà tuyển dụng cần email công ty và thông tin xác thực trước khi đăng tin."}
           </p>
         </div>
 
         <div className="auth-proof-grid">
           <div><strong>96%</strong><span>CV match cao nhất</span></div>
-          <div><strong>1.2k</strong><span>CV trong talent bank</span></div>
-          <div><strong>98%</strong><span>Email delivery ready</span></div>
+          <div><strong>1.2k</strong><span>CV trong Talent Pool</span></div>
+          <div><strong>98%</strong><span>Email gửi thành công</span></div>
         </div>
 
         <div className="auth-benefits">
           <p><CheckCircle2 size={15} /> Một phương thức chính: Email OTP 6 số</p>
           <p><CheckCircle2 size={15} /> Google/GitHub OAuth cho đăng nhập nhanh</p>
-          <p><CheckCircle2 size={15} /> Candidate và Recruiter tách workspace sau xác thực</p>
+          <p><CheckCircle2 size={15} /> Ứng viên và nhà tuyển dụng tách không gian làm việc sau xác thực</p>
         </div>
       </section>
 
@@ -114,7 +114,7 @@ export function AuthPage({
         <div className="auth-card">
           <div className="auth-card-head">
             <div>
-              <span className="eyebrow">{isLogin ? "Login" : "Register"}</span>
+              <span className="eyebrow">{isLogin ? "Đăng nhập" : "Đăng ký"}</span>
               <h2>{isLogin ? "Chào mừng trở lại" : "Bắt đầu với UpNext"}</h2>
               <p>{isLogin ? "Nhập email để nhận mã xác thực 6 số." : "Chọn vai trò, điền thông tin cần thiết và xác thực email."}</p>
             </div>
@@ -145,15 +145,15 @@ export function AuthPage({
           <div className="oauth-grid">
             <button className="oauth-button" onClick={() => navigate(roleHome[role])}>
               <GoogleMark />
-              <span>Continue with Google</span>
+              <span>Tiếp tục với Google</span>
             </button>
             <button className="oauth-button" onClick={() => navigate(roleHome[role])}>
               <Github size={17} strokeWidth={2.1} />
-              <span>Continue with GitHub</span>
+              <span>Tiếp tục với GitHub</span>
             </button>
           </div>
 
-          <div className="divider"><span>or use email</span></div>
+          <div className="divider"><span>hoặc dùng email</span></div>
 
           <div className="login-flow">
             {stage === "email" ? (
@@ -173,7 +173,7 @@ export function AuthPage({
                         <>
                           <AuthMiniField label="Họ tên" value="Nguyen Minh Khoa" />
                           <AuthMiniField label="Vị trí mong muốn" value="Senior Frontend Engineer" />
-                          <AuthMiniField label="Khu vực" value="Ho Chi Minh, Hybrid" />
+                          <AuthMiniField label="Khu vực" value="TP. Hồ Chí Minh, Hybrid" />
                           <AuthMiniField label="CV mặc định" value="Frontend Lead CV.pdf" />
                         </>
                       ) : (
@@ -229,10 +229,10 @@ export function AuthPage({
 
           <AuthNotice>
             {isLogin
-              ? "UpNext chỉ dùng Email OTP cho passwordless login để giữ flow rõ ràng, dễ kiểm soát và phù hợp với web app."
+              ? "UpNext chỉ dùng Email OTP cho đăng nhập không mật khẩu để giữ flow rõ ràng, dễ kiểm soát và phù hợp với web app."
               : role === "candidate"
-                ? "Candidate có thể hoàn tất hồ sơ sau khi xác thực email."
-                : "Recruiter cần xác thực email công ty trước khi đăng tin hoặc mua gói."}
+                ? "Ứng viên có thể hoàn tất hồ sơ sau khi xác thực email."
+                : "Nhà tuyển dụng cần xác thực email công ty trước khi đăng tin hoặc mua gói."}
           </AuthNotice>
 
           <div className="auth-footer-note">

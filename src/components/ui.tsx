@@ -111,7 +111,7 @@ export function Modal({ title, children, onClose }: { title: string; children: R
       <section className="modal-panel" role="dialog" aria-modal="true" aria-label={title} onMouseDown={(event) => event.stopPropagation()}>
         <header className="modal-header">
           <h2>{title}</h2>
-          <button className="ghost-icon" onClick={onClose} aria-label="Close modal">x</button>
+          <button className="ghost-icon" onClick={onClose} aria-label="Đóng modal">x</button>
         </header>
         {children}
       </section>

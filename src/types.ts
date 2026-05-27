@@ -21,7 +21,7 @@ export type Job = {
   status: string;
   posted: string;
   applicants: number;
-  model: "Remote" | "Hybrid" | "Onsite";
+  model: "Remote" | "Hybrid" | "Tại văn phòng";
 };
 
 export type Candidate = {

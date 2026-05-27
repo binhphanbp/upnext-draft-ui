@@ -40,7 +40,7 @@ export function AppShell({ path, navigate, children }: LayoutProps) {
         <TopBar title={activeRoute?.label ?? "UpNext"} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
         <section className="page-scroll">{children}</section>
       </section>
-      <button className="chat-fab" aria-label="Open assistant">
+      <button className="chat-fab" aria-label="Mở trợ lý">
         <MessageCircle size={22} fill="currentColor" />
       </button>
       {pricingOpen && <PricingModal onClose={() => setPricingOpen(false)} />}
@@ -61,11 +61,11 @@ export function CandidateShell({ path, navigate, children }: LayoutProps) {
   return (
     <main className="candidate-site">
       <header className="candidate-site-header">
-        <button className="candidate-site-logo" onClick={() => navigate("/candidate")} aria-label="UpNext home">
+        <button className="candidate-site-logo" onClick={() => navigate("/candidate")} aria-label="Trang chủ UpNext">
           <img src={upnextLogo.icon} alt="" />
           <strong>UPNEXT</strong>
         </button>
-        <nav className="candidate-site-nav" aria-label="Candidate navigation">
+        <nav className="candidate-site-nav" aria-label="Điều hướng ứng viên">
           {navItems.map(([label, href]) => (
             <button className={path === href ? "active" : ""} key={href} onClick={() => navigate(href)}>
               {label}
@@ -81,7 +81,7 @@ export function CandidateShell({ path, navigate, children }: LayoutProps) {
         </div>
       </header>
       <section className="candidate-public-main">{children}</section>
-      <div className="candidate-floating-stack" aria-label="Quick actions">
+      <div className="candidate-floating-stack" aria-label="Thao tác nhanh">
         <button><Bell size={17} /><span>0</span></button>
         <button><FileText size={17} /></button>
         <button><MessageCircle size={17} fill="currentColor" /></button>
@@ -101,7 +101,7 @@ function Rail({ path, navigate }: { path: string; navigate: (path: string) => vo
         : ["/candidate", "/candidate/saved", "/candidate/messages", "/candidate/ai", "/candidate/settings"];
   return (
     <aside className="rail">
-      <button className="rail-logo" onClick={() => navigate("/login")} aria-label="Auth">
+      <button className="rail-logo" onClick={() => navigate("/login")} aria-label="Xác thực">
         <img src={upnextLogo.icon} alt="" />
       </button>
       <div className="rail-icons">
@@ -117,7 +117,7 @@ function Rail({ path, navigate }: { path: string; navigate: (path: string) => vo
         })}
       </div>
       <div className="rail-bottom">
-        <button className="rail-icon" aria-label="Settings">
+        <button className="rail-icon" aria-label="Cài đặt">
           <Settings2 size={16} />
         </button>
         <button className="rail-icon active" aria-label="AI">
@@ -151,14 +151,14 @@ function Sidebar({
       <div className="workspace-switcher">
         {switcherRoles.map((role) => (
           <button className={activeRole === role ? "active" : ""} key={role} onClick={() => navigate(roleHome[role])}>
-            {role === "candidate" ? "Candidate" : role === "employer" ? "Recruiter" : "Admin"}
+            {role === "candidate" ? "Ứng viên" : role === "employer" ? "Nhà tuyển dụng" : "Admin"}
           </button>
         ))}
       </div>
       <nav className="side-nav">
         {["access", activeRole].map((group) => (
           <section key={group}>
-            <p>{group === "access" ? "Access" : group}</p>
+            <p>{group === "access" ? "Truy cập" : group === "candidate" ? "Ứng viên" : group === "employer" ? "Nhà tuyển dụng" : "Admin"}</p>
             {visibleRoutes.filter((route) => route.role === group).map((route) => {
               const Icon = route.icon;
               return (
@@ -175,7 +175,7 @@ function Sidebar({
       <div className="sidebar-footer">
         <button className="plan-pill" onClick={onUpgrade}>
           <Zap size={14} fill="currentColor" />
-          Pro hiring
+          Gói tuyển dụng Pro
         </button>
         <button className="ghost-icon">
           <MoreHorizontal size={18} />
@@ -194,16 +194,16 @@ function TopBar({ title, activeRole, navigate, onUpgrade }: { title: string; act
       </div>
       <label className="global-search">
         <Search size={16} />
-        <input placeholder="Search jobs, CVs, companies, skills..." />
+        <input placeholder="Tìm việc, CV, công ty, kỹ năng..." />
       </label>
       <div className="top-actions">
         <button className="secondary-button top-role" onClick={() => navigate("/login")}>
-          {activeRole === "candidate" ? "Candidate" : activeRole === "admin" ? "Admin" : "Recruiter"}
+          {activeRole === "candidate" ? "Ứng viên" : activeRole === "admin" ? "Admin" : "Nhà tuyển dụng"}
           <ChevronDown size={13} />
         </button>
         <button className="upgrade" onClick={onUpgrade}>
           <Zap size={14} fill="currentColor" />
-          Upgrade
+          Nâng cấp
         </button>
         <button className="bell">
           <Bell size={16} />
@@ -218,56 +218,56 @@ function TopBar({ title, activeRole, navigate, onUpgrade }: { title: string; act
 
 const pricingPlans = [
   {
-    name: "Trial",
+    name: "Dùng thử",
     icon: ShieldCheck,
     description: "Dành cho đội mới thử quy trình tuyển dụng có AI.",
-    price: "Free",
+    price: "Miễn phí",
     cadence: "",
     current: true,
-    features: ["Applicant Tracking CRM", "1 active job post", "Resume parsing", "Basic hiring report"],
+    features: ["CRM theo dõi ứng viên", "1 tin tuyển dụng đang chạy", "Parse CV", "Báo cáo tuyển dụng cơ bản"],
   },
   {
-    name: "Starter",
+    name: "Khởi đầu",
     icon: Sparkles,
     description: "Cho startup cần đăng tin và lọc CV ổn định.",
     price: "$49",
-    cadence: "/mo",
-    features: ["5 active job posts", "300 CV parsing credits", "3 team members", "10 AI interview recordings"],
+    cadence: "/tháng",
+    features: ["5 tin tuyển dụng đang chạy", "300 lượt parse CV", "3 thành viên", "10 bản ghi phỏng vấn AI"],
   },
   {
-    name: "Growth",
+    name: "Tăng trưởng",
     icon: TrendingUp,
-    badge: "Popular",
+    badge: "Phổ biến",
     description: "Gói phù hợp nhất cho đội tuyển dụng IT đang scale.",
     price: "$149",
-    cadence: "/mo",
+    cadence: "/tháng",
     featured: true,
-    features: ["30 active job posts", "2,000 AI match credits", "Pipeline automation", "Google/Outlook calendar sync"],
+    features: ["30 tin tuyển dụng đang chạy", "2.000 lượt AI match", "Tự động hóa Pipeline", "Đồng bộ lịch Google/Outlook"],
   },
   {
-    name: "Enterprise",
+    name: "Doanh nghiệp",
     icon: Building2,
     description: "Cho công ty cần SLA, phân quyền và thanh toán riêng.",
-    price: "Custom",
+    price: "Theo nhu cầu",
     cadence: "",
-    features: ["Unlimited job posts", "Unlimited team members", "SSO and audit logs", "Dedicated support SLA"],
+    features: ["Không giới hạn tin tuyển dụng", "Không giới hạn thành viên", "SSO và audit log", "SLA hỗ trợ riêng"],
   },
 ];
 
 function PricingModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="pricing-backdrop" role="presentation" onMouseDown={onClose}>
-      <section className="pricing-modal" role="dialog" aria-modal="true" aria-label="Upgrade plans" onMouseDown={(event) => event.stopPropagation()}>
-        <button className="pricing-close" onClick={onClose} aria-label="Close pricing">
+      <section className="pricing-modal" role="dialog" aria-modal="true" aria-label="Bảng giá nâng cấp" onMouseDown={(event) => event.stopPropagation()}>
+        <button className="pricing-close" onClick={onClose} aria-label="Đóng bảng giá">
           <X size={18} />
         </button>
         <header className="pricing-header">
-          <span><Zap size={14} fill="currentColor" /> Upgrade to Plus</span>
-          <h2>No Tricks, Just Transparent Plans</h2>
-          <p>Chọn gói phù hợp cho Candidate, Recruiter hoặc đội vận hành tuyển dụng IT.</p>
-          <div className="billing-toggle" aria-label="Billing cycle">
-            <button className="active">Monthly</button>
-            <button>Yearly <b>Save 20%</b></button>
+          <span><Zap size={14} fill="currentColor" /> Nâng cấp Plus</span>
+          <h2>Gói rõ ràng, không phí ẩn</h2>
+          <p>Chọn gói phù hợp cho ứng viên, nhà tuyển dụng hoặc đội vận hành tuyển dụng IT.</p>
+          <div className="billing-toggle" aria-label="Chu kỳ thanh toán">
+            <button className="active">Hàng tháng</button>
+            <button>Hàng năm <b>Tiết kiệm 20%</b></button>
           </div>
         </header>
         <div className="pricing-grid">
@@ -285,11 +285,11 @@ function PricingModal({ onClose }: { onClose: () => void }) {
                 <div className="pricing-price">
                   <strong>{plan.price}<small>{plan.cadence}</small></strong>
                   <button className={plan.current ? "secondary-button" : plan.featured ? "primary-button" : "upgrade"}>
-                    {plan.current ? "Current Plan" : plan.name === "Enterprise" ? "Schedule Call" : "Upgrade"}
+                    {plan.current ? "Gói hiện tại" : plan.name === "Doanh nghiệp" ? "Đặt lịch tư vấn" : "Nâng cấp"}
                   </button>
                 </div>
                 <div className="pricing-features">
-                  <span>Unlock these features:</span>
+                  <span>Bao gồm:</span>
                   {plan.features.map((feature) => (
                     <p key={feature}><CheckCircle2 size={14} fill="currentColor" /> {feature}</p>
                   ))}
@@ -300,7 +300,7 @@ function PricingModal({ onClose }: { onClose: () => void }) {
         </div>
         <footer className="pricing-note">
           <CheckCircle2 size={15} />
-          Không tính phí ẩn. Có thể đổi gói hoặc hủy gia hạn ở trang Company & Billing.
+          Không tính phí ẩn. Có thể đổi gói hoặc hủy gia hạn ở trang Công ty & thanh toán.
         </footer>
       </section>
     </div>

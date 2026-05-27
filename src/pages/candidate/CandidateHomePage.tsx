@@ -60,7 +60,7 @@ const demandBars = [
 export function CandidateHomePage({ navigate }: { navigate: (path: string) => void }) {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const bestJobs = jobs.slice(0, 8);
-  const nearbyJobs = jobs.filter((job) => job.place === "Ho Chi Minh" || job.place === "Remote").slice(0, 6);
+  const nearbyJobs = jobs.filter((job) => job.place === "TP. Hồ Chí Minh" || job.place === "Remote").slice(0, 6);
 
   return (
     <div className="candidate-homepage">
@@ -74,7 +74,7 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
             </label>
             <label>
               <MapPin size={18} />
-              <input value="Ho Chi Minh, Ha Noi, Remote" readOnly />
+              <input value="TP. Hồ Chí Minh, Hà Nội, Remote" readOnly />
             </label>
             <button onClick={() => navigate("/candidate/saved")}><Search size={18} /> Tìm kiếm</button>
           </div>
@@ -96,7 +96,7 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
             <div className="candidate-hero-main">
               <article className="candidate-promo-card">
                 <div>
-                  <span>IT career advantage</span>
+                  <span>Lợi thế nghề nghiệp IT</span>
                   <h2>Tiếp lợi thế, nối thành công</h2>
                   <p>AI match CV với JD, gợi ý mức lương, cảnh báo công ty uy tín và theo dõi lịch phỏng vấn.</p>
                   <button onClick={() => navigate("/candidate/profile")}><FileText size={15} /> Tạo CV chuẩn IT</button>
@@ -142,7 +142,7 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
             <button className={index === 0 ? "active" : ""} key={filter}>{filter}</button>
           ))}
         </div>
-        <div className="candidate-tip"><Sparkles size={16} /> Gợi ý: Di chuột vào job để xem lương, trust score và lý do match trước khi ứng tuyển.</div>
+        <div className="candidate-tip"><Sparkles size={16} /> Gợi ý: Di chuột vào tin tuyển dụng để xem lương, điểm uy tín và lý do match trước khi ứng tuyển.</div>
         <div className="candidate-jobs-with-side">
           <div className="candidate-job-grid">
             {bestJobs.map((job) => <CandidateJobCard job={job} key={job.title} onOpen={() => setSelectedJob(job)} />)}
@@ -163,7 +163,7 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
             <div className="market-bot-visual" aria-hidden="true">
               <Sparkles size={26} />
               <strong>AI</strong>
-              <span>54.830 jobs</span>
+              <span>54.830 việc</span>
             </div>
             <div className="fresh-jobs">
               {jobs.slice(0, 3).map((job) => (
@@ -220,7 +220,7 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
         <div className="candidate-section-head">
           <div>
             <h2>Việc gần bạn và việc remote phù hợp</h2>
-            <p>Ưu tiên vị trí đúng kỳ vọng lương, thời gian phản hồi nhanh và trust score tốt.</p>
+            <p>Ưu tiên vị trí đúng kỳ vọng lương, thời gian phản hồi nhanh và điểm uy tín tốt.</p>
           </div>
           <button><Navigation size={15} /> Cập nhật vị trí</button>
         </div>
@@ -243,7 +243,7 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
               <span>TOP</span>
               <div>{company.name.slice(0, 2).toUpperCase()}</div>
               <strong>{company.name}</strong>
-              <p>{company.field} • {company.jobs} việc • Trust {company.trust}</p>
+              <p>{company.field} • {company.jobs} việc • Uy tín {company.trust}</p>
             </article>
           ))}
         </div>
@@ -258,8 +258,8 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
 
       <section className="candidate-tools-section">
         {[
-          [FileText, "CV chuẩn IT", "Tạo CV có match score, nhiều phiên bản và trạng thái mặc định để quick apply."],
-          [WandSparkles, "AI career assistant", "Gợi ý sửa CV, cover letter, câu hỏi phỏng vấn và khoảng lương nên đàm phán."],
+          [FileText, "CV chuẩn IT", "Tạo CV có match score, nhiều phiên bản và trạng thái mặc định để ứng tuyển nhanh."],
+          [WandSparkles, "Trợ lý nghề nghiệp AI", "Gợi ý sửa CV, cover letter, câu hỏi phỏng vấn và khoảng lương nên đàm phán."],
           [BookOpen, "Cẩm nang nghề nghiệp", "Theo dõi xu hướng React, Backend, Cloud, AI và lộ trình nâng cấp kỹ năng."],
         ].map(([Icon, title, detail]) => (
           <article className="candidate-tool-card" key={title as string}>
@@ -277,14 +277,14 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
               <div className="company-dot">{selectedJob.company.charAt(0)}</div>
               <div>
                 <h3>{selectedJob.company}</h3>
-                <span>{selectedJob.place} • {selectedJob.salary} • Trust score {selectedJob.trust}</span>
+                <span>{selectedJob.place} • {selectedJob.salary} • Điểm uy tín {selectedJob.trust}</span>
               </div>
               <ScoreRing label="Match" value={selectedJob.match} />
             </div>
             <div className="match-reasons">
               <div><strong>Vì sao phù hợp</strong><p>{selectedJob.tags.join(", ")} khớp với CV mặc định và kinh nghiệm sản phẩm IT.</p></div>
               <div><strong>Cần kiểm tra</strong><p>So sánh range lương, hình thức làm việc và tốc độ phản hồi của nhà tuyển dụng.</p></div>
-              <div><strong>Luồng ứng tuyển</strong><p>Ứng tuyển bằng CV mặc định, theo dõi trạng thái và nhận lịch phỏng vấn trong Messages.</p></div>
+              <div><strong>Luồng ứng tuyển</strong><p>Ứng tuyển bằng CV mặc định, theo dõi trạng thái và nhận lịch phỏng vấn trong Tin nhắn.</p></div>
             </div>
             <div className="modal-actions">
               <button className="secondary-button"><Heart size={15} /> Lưu việc</button>
@@ -304,7 +304,7 @@ function CandidateJobCard({ job, compact = false, onOpen }: { job: Job; compact?
       <div className="candidate-job-copy">
         <div>
           <h3>{job.title}</h3>
-          <button aria-label={`Save ${job.title}`} onClick={(event) => event.stopPropagation()}><Heart size={16} /></button>
+          <button aria-label={`Lưu ${job.title}`} onClick={(event) => event.stopPropagation()}><Heart size={16} /></button>
         </div>
         <p>{job.company}</p>
         <div className="candidate-job-tags">
@@ -313,7 +313,7 @@ function CandidateJobCard({ job, compact = false, onOpen }: { job: Job; compact?
           <span>{job.model}</span>
         </div>
         <div className="candidate-job-foot">
-          <span><Star size={13} /> Trust {job.trust}</span>
+          <span><Star size={13} /> Uy tín {job.trust}</span>
           <span><TrendingUp size={13} /> {job.applicants} ứng viên</span>
           <b>{job.match}% match</b>
         </div>
