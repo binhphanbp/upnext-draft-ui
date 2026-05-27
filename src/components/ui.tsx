@@ -63,7 +63,7 @@ export function Metric({ title, value, detail }: { title: string; value: string;
 }
 
 export function Avatar({ name, index, large = false }: { name: string; index: number; large?: boolean }) {
-  const colors = ["#3196ec", "#2faf72", "#7a2cf3", "#f6a311", "#ef4444"];
+  const colors = ["#3b82f6", "#10a778", "#574bf5", "#f59e0b", "#ef4444"];
   return (
     <span className={large ? "mini-avatar large" : "mini-avatar"} style={{ background: colors[index % colors.length] }}>
       {name.split(" ").slice(-1)[0].charAt(0)}

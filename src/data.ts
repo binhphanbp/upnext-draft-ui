@@ -573,8 +573,8 @@ export const pipelineSeed: PipelineColumn[] = [
   {
     id: "applied",
     title: "Applied",
-    color: "#3196ec",
-    bg: "#eaf4ff",
+    color: "#3b82f6",
+    bg: "#eff6ff",
     items: [
       { id: "p-1", title: "React Lead - 31 CV", person: "Nguyen Minh Khoa", sla: "SLA 1 day", tag: "Need review", match: 96 },
       { id: "p-2", title: "DevOps - 22 CV", person: "Pham Quoc Viet", sla: "SLA 2 days", tag: "High match", match: 89 },
@@ -587,8 +587,8 @@ export const pipelineSeed: PipelineColumn[] = [
   {
     id: "shortlisted",
     title: "Shortlisted",
-    color: "#7a2cf3",
-    bg: "#f2ebff",
+    color: "#574bf5",
+    bg: "#eef2ff",
     items: [
       { id: "p-4", title: "Bao Anh - Node.js", person: "Tran Bao Anh", sla: "SLA 1 day", tag: "High match", match: 92 },
       { id: "p-5", title: "Khoa - React Lead", person: "Nguyen Minh Khoa", sla: "SLA today", tag: "Schedule", match: 96 },
@@ -599,8 +599,8 @@ export const pipelineSeed: PipelineColumn[] = [
   {
     id: "interview",
     title: "Interview",
-    color: "#f6a311",
-    bg: "#fff4de",
+    color: "#f59e0b",
+    bg: "#fffbeb",
     items: [
       { id: "p-7", title: "Khoa - Fri 09:00", person: "Nguyen Minh Khoa", sla: "Loop 1/2", tag: "Confirmed", match: 96 },
       { id: "p-8", title: "Bao Anh - Tue 14:00", person: "Tran Bao Anh", sla: "Loop 1/2", tag: "Waiting", match: 92 },
@@ -610,8 +610,8 @@ export const pipelineSeed: PipelineColumn[] = [
   {
     id: "offer",
     title: "Offer",
-    color: "#2faf72",
-    bg: "#e9f8f0",
+    color: "#10a778",
+    bg: "#e7fff7",
     items: [
       { id: "p-10", title: "Frontend Lead", person: "Nguyen Minh Khoa", sla: "Offer sent", tag: "Negotiating", match: 96 },
       { id: "p-11", title: "Cloud Engineer", person: "Pham Quoc Viet", sla: "Offer review", tag: "Approved", match: 89 },
@@ -621,8 +621,8 @@ export const pipelineSeed: PipelineColumn[] = [
   {
     id: "hired",
     title: "Hired",
-    color: "#0f9f8d",
-    bg: "#e7f8f5",
+    color: "#0b7f5f",
+    bg: "#c7f8e8",
     items: [
       { id: "p-17", title: "Backend Platform", person: "Tran Bao Anh", sla: "Start Mon", tag: "Onboarding", match: 92 },
       { id: "p-18", title: "Frontend Architect", person: "Nguyen Minh Khoa", sla: "Contract signed", tag: "Done", match: 96 },

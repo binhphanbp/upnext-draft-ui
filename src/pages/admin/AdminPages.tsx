@@ -70,9 +70,9 @@ const revenueByPlan = [
 ];
 
 const roleDistribution = [
-  { name: "Candidate", value: 72, color: "#3196ec" },
-  { name: "Employer", value: 21, color: "#2faf72" },
-  { name: "Admin", value: 7, color: "#7a2cf3" },
+  { name: "Candidate", value: 72, color: "#3b82f6" },
+  { name: "Employer", value: 21, color: "#10a778" },
+  { name: "Admin", value: 7, color: "#574bf5" },
 ];
 
 const moderationTrend = [
@@ -121,10 +121,10 @@ export function AdminDashboardPage() {
         actions={<button className="primary-button"><Flag size={15} /> Review alerts</button>}
       />
       <div className="admin-kpi-grid">
-        <InsightCard title="New users" value="1,284" icon={UsersRound} color="#2f99f3" note="Candidate +18%, employer +7%" />
-        <InsightCard title="New posts" value="386" icon={BriefcaseBusiness} color="#7a2cf3" note="27 waiting moderation" />
-        <InsightCard title="Revenue" value="$42.8k" icon={Banknote} color="#2faf72" note="30 days subscription sales" />
-        <InsightCard title="AI latency" value="1.4s" icon={Gauge} color="#f6a311" note="Match scoring p95" />
+        <InsightCard title="New users" value="1,284" icon={UsersRound} color="#3b82f6" note="Candidate +18%, employer +7%" />
+        <InsightCard title="New posts" value="386" icon={BriefcaseBusiness} color="#574bf5" note="27 waiting moderation" />
+        <InsightCard title="Revenue" value="$42.8k" icon={Banknote} color="#10a778" note="30 days subscription sales" />
+        <InsightCard title="AI latency" value="1.4s" icon={Gauge} color="#f59e0b" note="Match scoring p95" />
       </div>
       <div className="admin-command-grid">
         <section className="panel admin-chart-card wide">
@@ -133,20 +133,20 @@ export function AdminDashboardPage() {
             <AreaChart data={adminGrowth}>
               <defs>
                 <linearGradient id="candidateGrowth" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor="#3196ec" stopOpacity={0.34} />
-                  <stop offset="95%" stopColor="#3196ec" stopOpacity={0.02} />
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.34} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.02} />
                 </linearGradient>
                 <linearGradient id="employerGrowth" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor="#2faf72" stopOpacity={0.34} />
-                  <stop offset="95%" stopColor="#2faf72" stopOpacity={0.02} />
+                  <stop offset="5%" stopColor="#10a778" stopOpacity={0.34} />
+                  <stop offset="95%" stopColor="#10a778" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <CartesianGrid vertical={false} stroke="#ececf2" strokeDasharray="5 5" />
               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} width={42} />
               <Tooltip content={<ChartTooltip />} />
-              <Area type="monotone" dataKey="candidates" stroke="#3196ec" strokeWidth={2.4} fill="url(#candidateGrowth)" isAnimationActive={false} />
-              <Area type="monotone" dataKey="employers" stroke="#2faf72" strokeWidth={2.4} fill="url(#employerGrowth)" isAnimationActive={false} />
+              <Area type="monotone" dataKey="candidates" stroke="#3b82f6" strokeWidth={2.4} fill="url(#candidateGrowth)" isAnimationActive={false} />
+              <Area type="monotone" dataKey="employers" stroke="#10a778" strokeWidth={2.4} fill="url(#employerGrowth)" isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
           <div className="chart-summary-row">
@@ -179,7 +179,7 @@ export function AdminDashboardPage() {
               <XAxis dataKey="plan" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} width={42} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill="#7a2cf3" radius={[8, 8, 2, 2]} maxBarSize={44} isAnimationActive={false} />
+              <Bar dataKey="revenue" fill="#574bf5" radius={[8, 8, 2, 2]} maxBarSize={44} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </section>
@@ -192,9 +192,9 @@ export function AdminDashboardPage() {
               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis hide />
               <Tooltip content={<ChartTooltip />} />
-              <Line type="monotone" dataKey="flagged" stroke="#f6a311" strokeWidth={2.4} dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="hidden" stroke="#ef3936" strokeWidth={2.4} dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="restored" stroke="#2faf72" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="flagged" stroke="#f59e0b" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="hidden" stroke="#ef4444" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="restored" stroke="#10a778" strokeWidth={2.4} dot={false} isAnimationActive={false} />
             </LineChart>
           </ResponsiveContainer>
         </section>
@@ -219,10 +219,10 @@ export function AdminModerationPage() {
         actions={<button className="primary-button"><RefreshCw size={15} /> Re-scan all posts</button>}
       />
       <div className="admin-kpi-grid compact">
-        <InsightCard title="Flagged today" value="34" icon={ShieldAlert} color="#f6a311" note="16 auto-hidden, 5 appealed" />
-        <InsightCard title="False positive" value="8%" icon={CheckCircle2} color="#2faf72" note="Goal below 10%" />
-        <InsightCard title="Avg review time" value="18m" icon={Gauge} color="#3196ec" note="P95 below 45m" />
-        <InsightCard title="Banned signals" value="142" icon={Flag} color="#ef3936" note="Fee, deposit, fake salary" />
+        <InsightCard title="Flagged today" value="34" icon={ShieldAlert} color="#f59e0b" note="16 auto-hidden, 5 appealed" />
+        <InsightCard title="False positive" value="8%" icon={CheckCircle2} color="#10a778" note="Goal below 10%" />
+        <InsightCard title="Avg review time" value="18m" icon={Gauge} color="#3b82f6" note="P95 below 45m" />
+        <InsightCard title="Banned signals" value="142" icon={Flag} color="#ef4444" note="Fee, deposit, fake salary" />
       </div>
       <div className="admin-dashboard-row">
         <section className="panel admin-chart-card">
@@ -233,8 +233,8 @@ export function AdminModerationPage() {
               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis hide />
               <Tooltip content={<ChartTooltip />} />
-              <Area type="monotone" dataKey="flagged" stroke="#f6a311" fill="#fff4de" strokeWidth={2.4} isAnimationActive={false} />
-              <Area type="monotone" dataKey="hidden" stroke="#ef3936" fill="#ffeded" strokeWidth={2.4} isAnimationActive={false} />
+              <Area type="monotone" dataKey="flagged" stroke="#f59e0b" fill="#fff4de" strokeWidth={2.4} isAnimationActive={false} />
+              <Area type="monotone" dataKey="hidden" stroke="#ef4444" fill="#ffeded" strokeWidth={2.4} isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </section>
@@ -293,8 +293,8 @@ export function AdminUsersFinancePage() {
               <XAxis dataKey="plan" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} width={44} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="revenue" fill="#2faf72" radius={[8, 8, 2, 2]} maxBarSize={44} isAnimationActive={false} />
-              <Bar dataKey="accounts" fill="#3196ec" radius={[8, 8, 2, 2]} maxBarSize={44} isAnimationActive={false} />
+              <Bar dataKey="revenue" fill="#10a778" radius={[8, 8, 2, 2]} maxBarSize={44} isAnimationActive={false} />
+              <Bar dataKey="accounts" fill="#3b82f6" radius={[8, 8, 2, 2]} maxBarSize={44} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </section>
@@ -306,8 +306,8 @@ export function AdminUsersFinancePage() {
               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis hide />
               <Tooltip content={<ChartTooltip />} />
-              <Line type="monotone" dataKey="candidates" stroke="#3196ec" strokeWidth={2.4} dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="employers" stroke="#2faf72" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="candidates" stroke="#3b82f6" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="employers" stroke="#10a778" strokeWidth={2.4} dot={false} isAnimationActive={false} />
             </LineChart>
           </ResponsiveContainer>
         </section>
@@ -413,7 +413,7 @@ export function AdminSeoPage() {
               <XAxis dataKey="page" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} width={44} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="clicks" fill="#2faf72" radius={[8, 8, 2, 2]} maxBarSize={34} isAnimationActive={false} />
+              <Bar dataKey="clicks" fill="#10a778" radius={[8, 8, 2, 2]} maxBarSize={34} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </section>
@@ -465,7 +465,7 @@ export function AdminSalesPage() {
               <XAxis type="number" hide />
               <YAxis dataKey="stage" type="category" axisLine={false} tickLine={false} tick={{ fill: "#535867", fontSize: 11 }} width={70} />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="count" fill="#7a2cf3" radius={[0, 8, 8, 0]} barSize={18} isAnimationActive={false} />
+              <Bar dataKey="count" fill="#574bf5" radius={[0, 8, 8, 0]} barSize={18} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </section>
@@ -477,7 +477,7 @@ export function AdminSalesPage() {
               <XAxis dataKey="plan" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} width={42} />
               <Tooltip content={<ChartTooltip />} />
-              <Area type="monotone" dataKey="revenue" stroke="#2faf72" strokeWidth={2.4} fill="#e8f8ef" isAnimationActive={false} />
+              <Area type="monotone" dataKey="revenue" stroke="#10a778" strokeWidth={2.4} fill="#e8f8ef" isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </section>
@@ -524,8 +524,8 @@ export function AdminAuditPage() {
               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
               <YAxis hide />
               <Tooltip content={<ChartTooltip />} />
-              <Line type="monotone" dataKey="events" stroke="#3196ec" strokeWidth={2.4} dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="risk" stroke="#ef3936" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="events" stroke="#3b82f6" strokeWidth={2.4} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="risk" stroke="#ef4444" strokeWidth={2.4} dot={false} isAnimationActive={false} />
             </LineChart>
           </ResponsiveContainer>
         </section>

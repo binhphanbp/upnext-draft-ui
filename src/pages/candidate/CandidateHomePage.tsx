@@ -187,15 +187,15 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
                   <AreaChart data={marketTrend}>
                     <defs>
                       <linearGradient id="candidateJobsGradient" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="5%" stopColor="#19c37d" stopOpacity={0.55} />
-                        <stop offset="95%" stopColor="#19c37d" stopOpacity={0.04} />
+                        <stop offset="5%" stopColor="var(--color-teal-500)" stopOpacity={0.55} />
+                        <stop offset="95%" stopColor="var(--color-teal-500)" stopOpacity={0.04} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid vertical={false} stroke="rgba(255,255,255,.14)" />
-                    <XAxis dataKey="day" tick={{ fill: "#b8ffe2", fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: "#b8ffe2", fontSize: 10 }} axisLine={false} tickLine={false} width={48} />
+                    <XAxis dataKey="day" tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} width={48} />
                     <Tooltip content={<ChartTooltip />} />
-                    <Area dataKey="jobs" stroke="#20e08b" strokeWidth={3} fill="url(#candidateJobsGradient)" isAnimationActive={false} />
+                    <Area dataKey="jobs" stroke="var(--color-teal-400)" strokeWidth={3} fill="url(#candidateJobsGradient)" isAnimationActive={false} />
                   </AreaChart>
                 </ResponsiveContainer>
               </section>
@@ -204,10 +204,10 @@ export function CandidateHomePage({ navigate }: { navigate: (path: string) => vo
                 <ResponsiveContainer width="100%" height={180}>
                   <BarChart data={demandBars}>
                     <CartesianGrid vertical={false} stroke="rgba(255,255,255,.14)" />
-                    <XAxis dataKey="role" tick={{ fill: "#b8ffe2", fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: "#b8ffe2", fontSize: 10 }} axisLine={false} tickLine={false} width={42} />
+                    <XAxis dataKey="role" tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} width={42} />
                     <Tooltip content={<ChartTooltip />} />
-                    <Bar dataKey="value" fill="#20e08b" radius={[8, 8, 2, 2]} maxBarSize={38} isAnimationActive={false} />
+                    <Bar dataKey="value" fill="var(--color-teal-400)" radius={[8, 8, 2, 2]} maxBarSize={38} isAnimationActive={false} />
                   </BarChart>
                 </ResponsiveContainer>
               </section>

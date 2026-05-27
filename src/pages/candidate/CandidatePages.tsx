@@ -171,9 +171,9 @@ export function CandidateSavedJobsPage() {
       />
       <div className="job-market-strip">
         <InsightCard title="Saved jobs" value="28" icon={Heart} color="#ef4444" note="18 still open, 6 closing this week" />
-        <InsightCard title="Salary alerts" value="7" icon={TrendingUp} color="#2faf72" note="Jobs raised max salary above target" />
-        <InsightCard title="Company views" value="11" icon={Building2} color="#3196ec" note="Employers viewed your default CV" />
-        <InsightCard title="Quick apply ready" value="22" icon={CheckCircle2} color="#7a2cf3" note="CV and cover letter prepared" />
+        <InsightCard title="Salary alerts" value="7" icon={TrendingUp} color="#10a778" note="Jobs raised max salary above target" />
+        <InsightCard title="Company views" value="11" icon={Building2} color="#3b82f6" note="Employers viewed your default CV" />
+        <InsightCard title="Quick apply ready" value="22" icon={CheckCircle2} color="#574bf5" note="CV and cover letter prepared" />
       </div>
       <div className="two-column-layout">
         <section className="panel">
@@ -255,10 +255,10 @@ export function CandidateSalaryPage() {
         actions={<><button className="secondary-button"><WalletCards size={15} /> Export benchmark</button><button className="primary-button"><WandSparkles size={15} /> Negotiate with AI</button></>}
       />
       <div className="job-market-strip">
-        <InsightCard title="Median senior FE" value="$3.2k" icon={TrendingUp} color="#2faf72" note="HCMC hybrid, 5-7 years" />
-        <InsightCard title="Fastest growth" value="AI Product" icon={WandSparkles} color="#7a2cf3" note="+29% salary demand YoY" />
-        <InsightCard title="Remote premium" value="+12%" icon={MapPin} color="#3196ec" note="Global remote-ready CVs" />
-        <InsightCard title="Negotiation gap" value="$420" icon={WalletCards} color="#f6a311" note="Average accepted uplift" />
+        <InsightCard title="Median senior FE" value="$3.2k" icon={TrendingUp} color="#10a778" note="HCMC hybrid, 5-7 years" />
+        <InsightCard title="Fastest growth" value="AI Product" icon={WandSparkles} color="#574bf5" note="+29% salary demand YoY" />
+        <InsightCard title="Remote premium" value="+12%" icon={MapPin} color="#3b82f6" note="Global remote-ready CVs" />
+        <InsightCard title="Negotiation gap" value="$420" icon={WalletCards} color="#f59e0b" note="Average accepted uplift" />
       </div>
       <section className="panel">
         <PanelHeader icon={<TrendingUp size={17} />} title="Salary benchmark by IT track" action="Adjust filters" />

@@ -61,8 +61,8 @@ export function EmployerDashboardPage() {
               <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "#808497", fontSize: 11 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#808497", fontSize: 11 }} />
               <Tooltip content={<ChartTooltip />} cursor={false} />
-              <Bar dataKey="female" fill="#f6a311" radius={[8, 8, 0, 0]} maxBarSize={14} />
-              <Bar dataKey="male" fill="#3196ec" radius={[8, 8, 0, 0]} maxBarSize={14} />
+              <Bar dataKey="female" fill="#f59e0b" radius={[8, 8, 0, 0]} maxBarSize={14} />
+              <Bar dataKey="male" fill="#3b82f6" radius={[8, 8, 0, 0]} maxBarSize={14} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -136,10 +136,10 @@ export function EmployerCandidatesPage() {
         actions={<><button className="secondary-button"><Filter size={15} /> Skills / years / job</button><button className="primary-button"><Sparkles size={15} /> Re-score CVs</button></>}
       />
       <div className="recruiter-summary-strip">
-        <InsightCard title="New applications" value="128" icon={UsersRound} color="#3196ec" note="31 CVs need first review today" />
-        <InsightCard title="High match CVs" value="46" icon={Sparkles} color="#7a2cf3" note="Score 85+ across active jobs" />
-        <InsightCard title="Interview-ready" value="18" icon={CalendarClock} color="#f6a311" note="Require schedule confirmation" />
-        <InsightCard title="Talent pool" value="342" icon={Heart} color="#2faf72" note="Saved for future campaigns" />
+        <InsightCard title="New applications" value="128" icon={UsersRound} color="#3b82f6" note="31 CVs need first review today" />
+        <InsightCard title="High match CVs" value="46" icon={Sparkles} color="#574bf5" note="Score 85+ across active jobs" />
+        <InsightCard title="Interview-ready" value="18" icon={CalendarClock} color="#f59e0b" note="Require schedule confirmation" />
+        <InsightCard title="Talent pool" value="342" icon={Heart} color="#10a778" note="Saved for future campaigns" />
       </div>
       <div className="candidate-rank-grid">
         <RankingPanel selectedName={selectedCandidate.name} onSelect={setSelectedCandidate} />
@@ -382,10 +382,10 @@ export function EmployerTalentPoolPage() {
         actions={<><button className="secondary-button"><Mail size={15} /> Nurture campaign</button><button className="primary-button"><Heart size={15} /> Add to pool</button></>}
       />
       <div className="recruiter-summary-strip">
-        <InsightCard title="Saved candidates" value="342" icon={Heart} color="#2faf72" note="128 warm, 46 ready now" />
-        <InsightCard title="Consent ready" value="91%" icon={ShieldCheck} color="#3196ec" note="GDPR-style contact permission" />
-        <InsightCard title="Hot skills" value="React, K8s" icon={Sparkles} color="#7a2cf3" note="Most requested in active jobs" />
-        <InsightCard title="Campaign reply" value="28%" icon={Mail} color="#f6a311" note="Last 30 days outreach" />
+        <InsightCard title="Saved candidates" value="342" icon={Heart} color="#10a778" note="128 warm, 46 ready now" />
+        <InsightCard title="Consent ready" value="91%" icon={ShieldCheck} color="#3b82f6" note="GDPR-style contact permission" />
+        <InsightCard title="Hot skills" value="React, K8s" icon={Sparkles} color="#574bf5" note="Most requested in active jobs" />
+        <InsightCard title="Campaign reply" value="28%" icon={Mail} color="#f59e0b" note="Last 30 days outreach" />
       </div>
       <div className="two-column-layout">
         <section className="panel">
@@ -491,10 +491,10 @@ export function EmployerAnalyticsPage() {
         actions={<><button className="secondary-button">Export CSV</button><button className="primary-button"><SlidersHorizontal size={15} /> Build report</button></>}
       />
       <div className="admin-kpi-grid">
-        <InsightCard title="Apply -> shortlist" value="36%" icon={UsersRound} color="#3196ec" note="+8% vs last month" />
-        <InsightCard title="Interview pass" value="42%" icon={CalendarClock} color="#7a2cf3" note="Best source: referrals" />
-        <InsightCard title="Time to hire" value="18d" icon={Clock3} color="#f6a311" note="Target 21 days" />
-        <InsightCard title="Cost per hire" value="$418" icon={BriefcaseBusiness} color="#2faf72" note="Ads + AI credits" />
+        <InsightCard title="Apply -> shortlist" value="36%" icon={UsersRound} color="#3b82f6" note="+8% vs last month" />
+        <InsightCard title="Interview pass" value="42%" icon={CalendarClock} color="#574bf5" note="Best source: referrals" />
+        <InsightCard title="Time to hire" value="18d" icon={Clock3} color="#f59e0b" note="Target 21 days" />
+        <InsightCard title="Cost per hire" value="$418" icon={BriefcaseBusiness} color="#10a778" note="Ads + AI credits" />
       </div>
       <div className="dashboard-grid">
         <ApplicationsPanel />
@@ -540,8 +540,8 @@ function ApplicationsPanel() {
           <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#858897", fontSize: 11 }} />
           <YAxis hide domain={[0, 90]} />
           <Tooltip content={<ChartTooltip />} />
-          <Line type="monotone" dataKey="applied" stroke="#3196ec" strokeWidth={2.5} dot={false} />
-          <Line type="monotone" dataKey="shortlist" stroke="#2faf72" strokeWidth={2.5} dot={false} />
+          <Line type="monotone" dataKey="applied" stroke="#3b82f6" strokeWidth={2.5} dot={false} />
+          <Line type="monotone" dataKey="shortlist" stroke="#10a778" strokeWidth={2.5} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </section>
