@@ -205,23 +205,15 @@ input:focus-visible {
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-columns: 56px 248px minmax(0, 1fr);
+  grid-template-columns: 264px minmax(0, 1fr);
   background: #ffffff;
+  transition: grid-template-columns 0.2s ease;
 }
 
-.rail {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 8px;
-  gap: 18px;
-  background: #f7f6fb;
-  border-right: 1px solid #ebeaf2;
+.app-shell.sidebar-collapsed {
+  grid-template-columns: 76px minmax(0, 1fr);
 }
 
-.rail-logo,
-.rail-icon,
 .ghost-icon,
 .icon-button {
   display: grid;
@@ -229,53 +221,20 @@ input:focus-visible {
   border: 1px solid transparent;
 }
 
-.rail-logo {
-  width: 28px;
-  height: 28px;
-  background: #ffffff;
-  border-color: #e4e5eb;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(20, 24, 42, 0.06);
-}
-
-.rail-logo img {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  display: block;
-}
-
-.rail-icons,
-.rail-bottom {
-  display: grid;
-  gap: 13px;
-}
-
-.rail-bottom {
-  margin-top: auto;
-}
-
-.rail-icon {
-  width: 32px;
-  height: 32px;
-  color: #7c8190;
-  background: transparent;
-  border-radius: 8px;
-}
-
-.rail-icon.active {
-  color: var(--purple);
-  background: var(--purple-soft);
-}
-
 .sidebar {
+  position: relative;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding: 18px 14px;
+  padding: 18px 14px 14px;
   overflow: hidden;
   background: #f0eff6;
   border-right: 1px solid #e5e4ec;
+  transition: padding 0.2s ease;
+}
+
+.sidebar.collapsed {
+  padding-inline: 10px;
 }
 
 .brand {
@@ -287,18 +246,89 @@ input:focus-visible {
   min-height: 38px;
 }
 
-.brand-logo {
-  width: 118px;
+.brand-mark,
+.sidebar-toggle {
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+}
+
+.brand-mark {
+  min-width: 0;
+  height: 38px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  background: transparent;
+}
+
+.brand-mark img {
+  width: 126px;
   height: 34px;
   display: block;
   object-fit: contain;
   object-position: left center;
 }
 
+.sidebar.collapsed .brand {
+  justify-content: center;
+  margin-inline: 0;
+}
+
+.sidebar.collapsed .brand-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  justify-content: center;
+  background: #ffffff;
+  border-color: #e4e5eb;
+  border-radius: 11px;
+  box-shadow: 0 1px 3px rgba(20, 24, 42, 0.08);
+}
+
+.sidebar.collapsed .brand-mark img {
+  width: 22px;
+  height: 22px;
+  object-position: center;
+}
+
+.sidebar-toggle {
+  width: 32px;
+  height: 32px;
+  color: #5d6273;
+  background: #ffffff;
+  border-color: #dedde6;
+  border-radius: 9px;
+  box-shadow: 0 1px 2px rgba(20, 24, 42, 0.04);
+}
+
+.sidebar-toggle:hover {
+  color: var(--purple);
+  border-color: #d4c7ff;
+  background: #fbfaff;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  position: absolute;
+  left: 54px;
+  top: 20px;
+  z-index: 3;
+  width: 28px;
+  height: 28px;
+}
+
 .side-nav {
   min-height: 0;
   overflow: auto;
   padding-right: 2px;
+}
+
+.sidebar.collapsed .side-nav {
+  padding-right: 0;
+  overflow-x: visible;
 }
 
 .side-nav section {
@@ -313,6 +343,15 @@ input:focus-visible {
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.sidebar.collapsed .side-nav p {
+  width: 100%;
+  height: 1px;
+  margin: 10px 0 7px;
+  overflow: hidden;
+  color: transparent;
+  background: #dddce6;
 }
 
 .nav-item {
@@ -331,11 +370,31 @@ input:focus-visible {
   border-radius: 8px;
 }
 
+.sidebar.collapsed .nav-item {
+  width: 44px;
+  height: 42px;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 0;
+  padding: 0;
+  margin-inline: auto;
+  border-radius: 12px;
+  position: relative;
+}
+
 .nav-item span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sidebar.collapsed .nav-item span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 
 .nav-item svg {
@@ -350,6 +409,21 @@ input:focus-visible {
   text-align: center;
   background: #e3e2ea;
   border-radius: 999px;
+}
+
+.sidebar.collapsed .nav-item b {
+  min-width: 16px;
+  height: 16px;
+  position: absolute;
+  right: -2px;
+  top: -3px;
+  padding: 0 4px;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  line-height: 1;
+  background: #ffffff;
+  border: 1px solid #dedde6;
 }
 
 .nav-item.active {
@@ -372,6 +446,13 @@ input:focus-visible {
   border-top: 1px solid #e2e1e9;
 }
 
+.sidebar.collapsed .sidebar-footer {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding-top: 12px;
+}
+
 .plan-pill {
   height: 31px;
   display: flex;
@@ -384,6 +465,26 @@ input:focus-visible {
   background: linear-gradient(#ffe06f, #f5ba22);
   border: 1px solid #dca611;
   border-radius: 8px;
+}
+
+.plan-pill span {
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .plan-pill {
+  width: 42px;
+  height: 38px;
+  justify-content: center;
+  padding: 0;
+  border-radius: 12px;
+}
+
+.sidebar.collapsed .plan-pill span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 
 .ghost-icon,
@@ -2068,6 +2169,10 @@ input:focus-visible {
   background: #e6e5ed;
   border: 1px solid #dedde7;
   border-radius: 9px;
+}
+
+.sidebar.collapsed .workspace-switcher {
+  display: none;
 }
 
 .workspace-switcher button {
@@ -4559,7 +4664,11 @@ input:focus-visible {
 
 @media (max-width: 1320px) {
   .app-shell {
-    grid-template-columns: 56px 224px minmax(0, 1fr);
+    grid-template-columns: 236px minmax(0, 1fr);
+  }
+
+  .app-shell.sidebar-collapsed {
+    grid-template-columns: 76px minmax(0, 1fr);
   }
 
   .auth-screen {

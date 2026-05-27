@@ -5,12 +5,12 @@ import {
   ChevronDown,
   ChevronRight,
   CheckCircle2,
-  Command,
   FileText,
   MessageCircle,
   MoreHorizontal,
+  PanelLeftClose,
+  PanelLeftOpen,
   Search,
-  Settings2,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -31,11 +31,18 @@ export function AppShell({ path, navigate, children }: LayoutProps) {
   const activeRoute = routes.find((route) => route.path === path) ?? routes.find((route) => route.path === "/candidate");
   const activeRole = roleFromPath(path);
   const [pricingOpen, setPricingOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <main className="app-shell">
-      <Rail path={path} navigate={navigate} />
-      <Sidebar path={path} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
+    <main className={sidebarCollapsed ? "app-shell sidebar-collapsed" : "app-shell"}>
+      <Sidebar
+        path={path}
+        activeRole={activeRole}
+        collapsed={sidebarCollapsed}
+        navigate={navigate}
+        onToggle={() => setSidebarCollapsed((current) => !current)}
+        onUpgrade={() => setPricingOpen(true)}
+      />
       <section className="workspace">
         <TopBar title={activeRoute?.label ?? "UpNext"} activeRole={activeRole} navigate={navigate} onUpgrade={() => setPricingOpen(true)} />
         <section className="page-scroll">{children}</section>
@@ -91,64 +98,35 @@ export function CandidateShell({ path, navigate, children }: LayoutProps) {
   );
 }
 
-function Rail({ path, navigate }: { path: string; navigate: (path: string) => void }) {
-  const activeRole = roleFromPath(path);
-  const shortcuts =
-    activeRole === "admin"
-      ? ["/admin", "/admin/moderation", "/admin/roles", "/admin/audit"]
-      : activeRole === "employer"
-        ? ["/employer", "/employer/candidates", "/employer/pipeline", "/employer/interviews", "/employer/analytics"]
-        : ["/candidate", "/candidate/saved", "/candidate/messages", "/candidate/ai", "/candidate/settings"];
-  return (
-    <aside className="rail">
-      <button className="rail-logo" onClick={() => navigate("/login")} aria-label="Xác thực">
-        <img src={upnextLogo.icon} alt="" />
-      </button>
-      <div className="rail-icons">
-        {shortcuts.map((item) => {
-          const route = routes.find((entry) => entry.path === item);
-          if (!route) return null;
-          const Icon = route.icon;
-          return (
-            <button className={path === item ? "rail-icon active" : "rail-icon"} key={item} onClick={() => navigate(item)} aria-label={route.label}>
-              <Icon size={16} />
-            </button>
-          );
-        })}
-      </div>
-      <div className="rail-bottom">
-        <button className="rail-icon" aria-label="Cài đặt">
-          <Settings2 size={16} />
-        </button>
-        <button className="rail-icon active" aria-label="AI">
-          <Sparkles size={16} />
-        </button>
-      </div>
-    </aside>
-  );
-}
-
 function Sidebar({
   path,
   activeRole,
+  collapsed,
   navigate,
+  onToggle,
   onUpgrade,
 }: {
   path: string;
   activeRole: Role;
+  collapsed: boolean;
   navigate: (path: string) => void;
+  onToggle: () => void;
   onUpgrade: () => void;
 }) {
   const visibleRoutes = routes.filter((route) => route.role === "access" || route.role === activeRole);
   const switcherRoles = activeRole === "admin" ? (["admin"] as Role[]) : (["candidate", "employer"] as Role[]);
 
   return (
-    <aside className="sidebar">
+    <aside className={collapsed ? "sidebar collapsed" : "sidebar"} aria-label="Điều hướng chính">
       <div className="brand">
-        <img className="brand-logo" src={upnextLogo.wordmark} alt="UpNext" />
-        <Command size={15} />
+        <button className="brand-mark" onClick={() => navigate(roleHome[activeRole])} aria-label="Về trang chính">
+          <img src={collapsed ? upnextLogo.icon : upnextLogo.wordmark} alt="UpNext" />
+        </button>
+        <button className="sidebar-toggle" onClick={onToggle} aria-label={collapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}>
+          {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+        </button>
       </div>
-      <div className="workspace-switcher">
+      <div className="workspace-switcher" aria-hidden={collapsed}>
         {switcherRoles.map((role) => (
           <button className={activeRole === role ? "active" : ""} key={role} onClick={() => navigate(roleHome[role])}>
             {role === "candidate" ? "Ứng viên" : role === "employer" ? "Nhà tuyển dụng" : "Admin"}
@@ -162,7 +140,7 @@ function Sidebar({
             {visibleRoutes.filter((route) => route.role === group).map((route) => {
               const Icon = route.icon;
               return (
-                <button className={path === route.path ? "nav-item active" : "nav-item"} key={route.path} onClick={() => navigate(route.path)}>
+                <button className={path === route.path ? "nav-item active" : "nav-item"} key={route.path} onClick={() => navigate(route.path)} title={route.label}>
                   <Icon size={17} />
                   <span>{route.label}</span>
                   {route.badge && <b>{route.badge}</b>}
@@ -175,7 +153,7 @@ function Sidebar({
       <div className="sidebar-footer">
         <button className="plan-pill" onClick={onUpgrade}>
           <Zap size={14} fill="currentColor" />
-          Gói tuyển dụng Pro
+          <span>Gói tuyển dụng Pro</span>
         </button>
         <button className="ghost-icon">
           <MoreHorizontal size={18} />
