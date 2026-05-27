@@ -876,9 +876,11 @@ input:focus-visible {
 }
 
 .pricing-price strong {
+  min-width: 0;
   color: #10131e;
   font-size: 25px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .pricing-price small {
@@ -890,7 +892,7 @@ input:focus-visible {
 
 .pricing-cta {
   height: 34px;
-  min-width: 100px;
+  min-width: 104px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -938,6 +940,8 @@ input:focus-visible {
   color: var(--color-text-primary);
   background: #ffffff;
   border-color: var(--color-border-default);
+  min-width: 112px;
+  padding-inline: 12px;
 }
 
 .pricing-cta.consult:hover {
@@ -975,9 +979,21 @@ input:focus-visible {
   line-height: 1.25;
 }
 
-.pricing-features svg {
-  color: var(--green);
+.pricing-features p i {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
   flex: 0 0 auto;
+  color: var(--color-success-text);
+  background: var(--color-success-subtle);
+  border: 1px solid color-mix(in srgb, var(--color-success-default) 28%, transparent);
+  border-radius: 999px;
+  font-style: normal;
+}
+
+.pricing-features p i svg {
+  display: block;
 }
 
 .pricing-note {

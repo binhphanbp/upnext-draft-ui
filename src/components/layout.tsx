@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Bell,
   Building2,
+  Check,
   ChevronDown,
   ChevronRight,
   CheckCircle2,
@@ -226,8 +227,9 @@ const pricingPlans = [
     name: "Doanh nghiệp",
     icon: Building2,
     description: "Cho công ty cần SLA, phân quyền và thanh toán riêng.",
-    price: "Theo nhu cầu",
+    price: "Liên hệ",
     cadence: "",
+    enterprise: true,
     features: ["Không giới hạn tin tuyển dụng", "Không giới hạn thành viên", "SSO và audit log", "SLA hỗ trợ riêng"],
   },
 ];
@@ -251,9 +253,10 @@ function PricingModal({ onClose }: { onClose: () => void }) {
         <div className="pricing-grid">
           {pricingPlans.map((plan) => {
             const Icon = plan.icon;
-            const ctaClass = plan.current ? "pricing-cta current" : plan.featured ? "pricing-cta featured" : plan.name === "Doanh nghiệp" ? "pricing-cta consult" : "pricing-cta";
+            const ctaClass = plan.current ? "pricing-cta current" : plan.featured ? "pricing-cta featured" : plan.enterprise ? "pricing-cta consult" : "pricing-cta";
+            const cardClass = ["pricing-card", plan.featured ? "featured" : "", plan.enterprise ? "enterprise" : ""].filter(Boolean).join(" ");
             return (
-              <article className={plan.featured ? "pricing-card featured" : "pricing-card"} key={plan.name}>
+              <article className={cardClass} key={plan.name}>
                 <div className="pricing-card-head">
                   <div>
                     <h3>{plan.name} {plan.badge && <em>{plan.badge}</em>}</h3>
@@ -264,13 +267,13 @@ function PricingModal({ onClose }: { onClose: () => void }) {
                 <div className="pricing-price">
                   <strong>{plan.price}<small>{plan.cadence}</small></strong>
                   <button className={ctaClass}>
-                    {plan.current ? "Gói hiện tại" : plan.name === "Doanh nghiệp" ? "Đặt lịch tư vấn" : "Nâng cấp"}
+                    {plan.current ? "Gói hiện tại" : plan.enterprise ? "Đặt lịch tư vấn" : "Nâng cấp"}
                   </button>
                 </div>
                 <div className="pricing-features">
                   <span>Bao gồm:</span>
                   {plan.features.map((feature) => (
-                    <p key={feature}><CheckCircle2 size={14} fill="currentColor" /> {feature}</p>
+                    <p key={feature}><i><Check size={11} strokeWidth={3} /></i> {feature}</p>
                   ))}
                 </div>
               </article>
