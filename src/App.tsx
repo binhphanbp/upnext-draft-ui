@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
-import { AppShell, CandidateShell } from "./components/layout";
+import { AppShell } from "./components/layout";
 import { normalizePath } from "./routes";
 import { AuthPage } from "./pages/AuthPage";
 import { CandidateHomePage } from "./pages/candidate/CandidateHomePage";
-import {
-  CandidateAiPage,
-  CandidateApplicationsPage,
-  CandidateCompaniesPage,
-  CandidateMessagesPage,
-  CandidateProfilePage,
-  CandidateSalaryPage,
-  CandidateSavedJobsPage,
-  CandidateSettingsPage,
-} from "./pages/candidate/CandidatePages";
 import {
   EmployerAnalyticsPage,
   EmployerCandidatesPage,
@@ -86,11 +76,7 @@ export function App() {
   }
 
   if (path.startsWith("/candidate") || path === "/") {
-    return (
-      <CandidateShell path={path} navigate={navigate}>
-        <RouteSwitch path={path} navigate={navigate} />
-      </CandidateShell>
-    );
+    return <CandidateHomePage path={path} navigate={navigate} />;
   }
 
   return (
@@ -107,23 +93,16 @@ function RouteSwitch({ path, navigate }: { path: string; navigate: (path: string
 
   switch (path) {
     case "/candidate":
-      return <CandidateHomePage navigate={navigate} />;
+      return <CandidateHomePage path={path} navigate={navigate} />;
     case "/candidate/profile":
-      return <CandidateProfilePage />;
     case "/candidate/applications":
-      return <CandidateApplicationsPage />;
     case "/candidate/saved":
-      return <CandidateSavedJobsPage />;
     case "/candidate/companies":
-      return <CandidateCompaniesPage />;
     case "/candidate/salary":
-      return <CandidateSalaryPage />;
     case "/candidate/messages":
-      return <CandidateMessagesPage />;
     case "/candidate/ai":
-      return <CandidateAiPage />;
     case "/candidate/settings":
-      return <CandidateSettingsPage />;
+      return <CandidateHomePage path={path} navigate={navigate} />;
     case "/employer":
       return <EmployerDashboardPage />;
     case "/employer/jobs":
@@ -157,6 +136,6 @@ function RouteSwitch({ path, navigate }: { path: string; navigate: (path: string
     case "/admin/audit":
       return <AdminAuditPage />;
     default:
-      return <CandidateHomePage navigate={navigate} />;
+      return <CandidateHomePage path={path} navigate={navigate} />;
   }
 }

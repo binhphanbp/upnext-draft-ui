@@ -1,323 +1,404 @@
-import { useState } from "react";
-import type { CSSProperties } from "react";
 import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {
-  BookOpen,
+  Bell,
+  Bookmark,
+  BriefcaseBusiness,
+  ChevronDown,
+  ChevronLeft,
   ChevronRight,
-  FileText,
-  Heart,
+  Gift,
+  Mail,
   MapPin,
-  Navigation,
+  MessageSquare,
+  MoreVertical,
+  Paperclip,
+  Plus,
   Search,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  TrendingUp,
-  WandSparkles,
-  Zap,
+  UsersRound,
 } from "lucide-react";
-import { companies, jobs } from "../../data";
-import { ChartTooltip, Modal, ScoreRing } from "../../components/ui";
-import type { Job } from "../../types";
+import { upnextLogo } from "../../brand";
 
-const categories = [
-  ["Frontend / UI Platform", "128 việc", "React, Vue, design system"],
-  ["Backend / Platform", "112 việc", "Node.js, Go, Java"],
-  ["DevOps / SRE / Cloud", "84 việc", "Kubernetes, AWS, Terraform"],
-  ["Data / AI Engineer", "76 việc", "Python, MLOps, LLM"],
-  ["QA Automation", "52 việc", "Playwright, API test"],
-  ["Product / BA / PM", "48 việc", "Roadmap, analytics"],
+type CandidatePageProps = {
+  path: string;
+  navigate: (path: string) => void;
+};
+
+const navItems = [
+  ["Tổng quan", "/candidate"],
+  ["Tìm việc", "/candidate/jobs"],
+  ["Tài năng", "/candidate/talent"],
+  ["Lịch sử", "/candidate/history"],
+  ["AI Interview", "/candidate/ai"],
 ];
 
-const marketTrend = [
-  { day: "16/05", jobs: 52300, newJobs: 2510 },
-  { day: "17/05", jobs: 53140, newJobs: 2790 },
-  { day: "18/05", jobs: 53820, newJobs: 2920 },
-  { day: "19/05", jobs: 54480, newJobs: 3010 },
-  { day: "20/05", jobs: 54830, newJobs: 3098 },
-  { day: "21/05", jobs: 55220, newJobs: 3180 },
-  { day: "22/05", jobs: 55840, newJobs: 3340 },
+const brandJobs = [
+  { logo: "FPT", company: "FPT Software", title: "Fresher Java Developer", place: "Khu Công Nghệ Cao, TP.HCM", salary: "10 - 15 Tr/tháng", days: "2 ngày trước", applicants: "40", tags: ["PHP", "Laravel", "CSS", "React"] },
+  { logo: "mo", company: "MoMo", title: "Thực tập sinh Mobile/React Native", place: "Washington, USA", salary: "3 - 5 Tr/tháng", days: "3 days ago", applicants: "64", tags: ["React Native", "Redux", "Git"] },
+  { logo: "S", company: "Slack Technologies LLC", title: "Passionate Programmer", place: "California, USA", salary: "$15k-20k/month", days: "3 days ago", applicants: "54", tags: ["PHP", "Laravel", "CSS", "React"] },
+  { logo: "Bē", company: "Behance", title: "Product Designer", place: "New York, USA", salary: "$15k-20k/month", days: "3 days ago", applicants: "54", tags: ["PHP", "Laravel", "CSS", "React"] },
+  { logo: "in", company: "InVision", title: "UX Researcher", place: "New York, USA", salary: "$15k-20k/month", days: "3 days ago", applicants: "54", tags: ["PHP", "Laravel", "CSS", "React"] },
 ];
 
-const demandBars = [
-  { role: "FE", value: 14800 },
-  { role: "BE", value: 13200 },
-  { role: "Cloud", value: 9800 },
-  { role: "AI", value: 8600 },
-  { role: "QA", value: 7200 },
+const similarJobs = [
+  ["Zalo", "UI Designer Intern", "TP. Hồ Chí Minh", "10 - 15Tr", "Còn 2 ngày"],
+  ["TP", "Junior Java Developer", "Cầu Giấy, Hà Nội", "15 - 20Tr", "Còn 3 ngày"],
+  ["Viettel", "Mobile Dev (Flutter)", "Q.10, TP. Hồ Chí Minh", "15 - 20 Tr", "Còn 4 ngày"],
+  ["TIKI", "AI Research Resident", "Hà Nội", "$19 / Hr", "Còn 4 ngày"],
+  ["Tw", "Brand Strategist", "Hoàn Kiếm, Hà Nội", "$19 / Hr", "Còn 6 ngày"],
+  ["Apple", "iOS Developer Mobile", "San Fransisco, US", "$19 / Hr", "1 Weeks Left"],
+  ["Air", "HR Manager", "San Fransisco, US", "$19 / Hr", "1 Weeks Left"],
+  ["Mail", "Marketing Strategist", "San Fransisco, US", "$19 / Hr", "2 Weeks Left"],
+  ["N", "UI Designer", "San Fransisco, US", "$19 / Hr", "2 Weeks Left"],
 ];
 
-export function CandidateHomePage({ navigate }: { navigate: (path: string) => void }) {
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const bestJobs = jobs.slice(0, 8);
-  const nearbyJobs = jobs.filter((job) => job.place === "TP. Hồ Chí Minh" || job.place === "Remote").slice(0, 6);
+const companies = [
+  ["Apple", "Apple LLC", "4.8k"],
+  ["Autodesk", "Autodesk Inc", "4.8k"],
+  ["Behance", "Behance", "4.8k"],
+  ["Invision", "Invision", "4.8k"],
+  ["Spotify", "Spotify", "4.8k"],
+  ["Microsoft", "Microsoft", "4.8k"],
+  ["Github", "Github", "4.8k"],
+  ["Mailchimp", "mailchimp", "4.8k"],
+];
+
+const stats = [
+  ["989", "Lượt xem việc làm", "+15%", "mint", BriefcaseBusiness],
+  ["604", "Lượt ứng tuyển", "+10%", "pink", UsersRound],
+  ["1.057", "Việc làm đã đăng", "+10%", "yellow", Gift],
+  ["1.395", "Lượt AI Interview", "+4%", "lavender", Mail],
+];
+
+export function CandidateHomePage({ path, navigate }: CandidatePageProps) {
+  const route = normalizeCandidatePath(path);
 
   return (
-    <div className="candidate-homepage">
-      <section className="candidate-hero-site">
-        <div className="candidate-hero-inner">
-          <h1>UpNext - Tạo CV, tìm việc IT, tuyển dụng hiệu quả</h1>
-          <div className="candidate-searchbar">
-            <label>
-              <Search size={19} />
-              <input value="React, Node.js, DevOps, AI Engineer" readOnly />
-            </label>
-            <label>
-              <MapPin size={18} />
-              <input value="TP. Hồ Chí Minh, Hà Nội, Remote" readOnly />
-            </label>
-            <button onClick={() => navigate("/candidate/saved")}><Search size={18} /> Tìm kiếm</button>
-          </div>
+    <main className="cportal">
+      <CandidateTopNav path={route} navigate={navigate} />
+      {route === "/candidate/jobs" && <JobSearchPage navigate={navigate} />}
+      {route === "/candidate/jobs/fresher-java" && <JobDetailPage navigate={navigate} />}
+      {route === "/candidate/apply" && <ApplicationPage navigate={navigate} />}
+      {route === "/candidate/companies/uihut" && <CompanyDetailPage navigate={navigate} />}
+      {route === "/candidate" && <DashboardPage navigate={navigate} />}
+    </main>
+  );
+}
 
-          <div className="candidate-hero-grid">
-            <aside className="category-card">
-              {categories.map(([title, count, detail]) => (
-                <button key={title}>
-                  <div>
-                    <strong>{title}</strong>
-                    <span>{count} • {detail}</span>
-                  </div>
-                  <ChevronRight size={18} />
-                </button>
-              ))}
-              <div className="category-pager"><span>1/4</span><button><ChevronRight size={16} /></button></div>
-            </aside>
+function normalizeCandidatePath(path: string) {
+  if (path === "/" || path === "/candidate/profile" || path === "/candidate/saved") return "/candidate";
+  if (path === "/candidate/companies") return "/candidate/companies/uihut";
+  if (path === "/candidate/applications") return "/candidate/apply";
+  if (path === "/candidate/jobs" || path === "/candidate/jobs/fresher-java" || path === "/candidate/apply" || path === "/candidate/companies/uihut") return path;
+  return "/candidate";
+}
 
-            <div className="candidate-hero-main">
-              <article className="candidate-promo-card">
-                <div>
-                  <span>Lợi thế nghề nghiệp IT</span>
-                  <h2>Tiếp lợi thế, nối thành công</h2>
-                  <p>AI match CV với JD, gợi ý mức lương, cảnh báo công ty uy tín và theo dõi lịch phỏng vấn.</p>
-                  <button onClick={() => navigate("/candidate/profile")}><FileText size={15} /> Tạo CV chuẩn IT</button>
-                </div>
-                <div className="candidate-hero-visual" aria-hidden="true">
-                  <div className="visual-window">
-                    <div className="visual-toolbar"><span /><span /><span /></div>
-                    <div className="visual-kpis"><i /><i /><i /></div>
-                    <div className="visual-bars">
-                      {[54, 72, 44, 86, 61, 93, 70].map((height) => <span style={{ height: `${height}%` }} key={height} />)}
-                    </div>
-                    <div className="visual-list"><b /><b /><b /></div>
-                  </div>
-                </div>
-              </article>
+function CandidateTopNav({ path, navigate }: CandidatePageProps) {
+  return (
+    <header className="cportal-topbar">
+      <button className="cportal-logo" onClick={() => navigate("/candidate")}>
+        <img src={upnextLogo.wordmark} alt="UpNext" />
+      </button>
+      <nav>
+        {navItems.map(([label, href]) => (
+          <button className={activeNav(path, href) ? "active" : ""} key={href} onClick={() => navigate(href)}>
+            {label}
+          </button>
+        ))}
+      </nav>
+      <div className="cportal-actions">
+        <button className="post-job"><Plus size={17} /> Đăng việc</button>
+        <button className="icon-button"><Bell size={19} /></button>
+        <button className="icon-button"><Mail size={19} /></button>
+        <button className="candidate-avatar"><img alt="" src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=80&q=80" /><ChevronDown size={16} /></button>
+      </div>
+    </header>
+  );
+}
 
-              <article className="market-ticker">
-                <div>
-                  <strong>Thị trường việc làm hôm nay</strong>
-                  <span>22/05/2026</span>
-                </div>
-                <div className="ticker-stats">
-                  <b>54.830</b><span>việc làm đang tuyển</span>
-                  <b>3.098</b><span>việc mới 24h</span>
-                  <b>18.648</b><span>công ty đang tuyển</span>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
+function activeNav(path: string, href: string) {
+  if (href === "/candidate") return path === "/candidate";
+  if (href === "/candidate/jobs") return path.startsWith("/candidate/jobs") || path === "/candidate/apply";
+  return path === href;
+}
 
-      <section className="candidate-content-band">
-        <div className="candidate-section-head">
-          <div>
-            <h2>Việc làm tốt nhất</h2>
-            <p>Đề xuất bởi UpNext AI theo CV, kỹ năng, lương mong muốn và lịch sử ứng tuyển.</p>
-          </div>
-          <button onClick={() => navigate("/candidate/saved")}>Xem tất cả <ChevronRight size={16} /></button>
-        </div>
-        <div className="candidate-filter-row">
-          {["Ngẫu nhiên", "Hồ Chí Minh", "Remote", "Senior", "$2.000+", "Fintech", "AI Product"].map((filter, index) => (
-            <button className={index === 0 ? "active" : ""} key={filter}>{filter}</button>
-          ))}
-        </div>
-        <div className="candidate-tip"><Sparkles size={16} /> Gợi ý: Di chuột vào tin tuyển dụng để xem lương, điểm uy tín và lý do match trước khi ứng tuyển.</div>
-        <div className="candidate-jobs-with-side">
-          <div className="candidate-job-grid">
-            {bestJobs.map((job) => <CandidateJobCard job={job} key={job.title} onOpen={() => setSelectedJob(job)} />)}
-          </div>
-          <aside className="candidate-safe-card">
-            <ShieldCheck size={24} />
-            <strong>Tìm việc an toàn cùng UpNext</strong>
-            <p>Chỉ ưu tiên công ty đã xác thực, cảnh báo bài đăng rủi ro và ẩn công ty bạn không muốn lộ CV.</p>
-            <button onClick={() => navigate("/candidate/settings")}>Cài đặt bảo mật</button>
-          </aside>
-        </div>
-      </section>
-
-      <section className="candidate-market-section">
-        <div className="candidate-market-dashboard">
-          <div className="market-left">
-            <h2>Thị trường IT hôm nay <span>22/05/2026</span></h2>
-            <div className="market-bot-visual" aria-hidden="true">
-              <Sparkles size={26} />
-              <strong>AI</strong>
-              <span>54.830 việc</span>
-            </div>
-            <div className="fresh-jobs">
-              {jobs.slice(0, 3).map((job) => (
-                <button key={job.title} onClick={() => setSelectedJob(job)}>
-                  <span>{job.company.charAt(0)}</span>
-                  <div><strong>{job.title}</strong><small>{job.company} • {job.place}</small></div>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="market-chart-panel">
-            <div className="market-metrics">
-              <div><b>3.098</b><span>Việc mới 24h</span></div>
-              <div><b>54.830</b><span>Việc đang tuyển</span></div>
-              <div><b>18.648</b><span>Công ty IT</span></div>
-            </div>
-            <div className="market-charts">
-              <section>
-                <h3>Tăng trưởng cơ hội việc làm</h3>
-                <ResponsiveContainer width="100%" height={180}>
-                  <AreaChart data={marketTrend}>
-                    <defs>
-                      <linearGradient id="candidateJobsGradient" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="5%" stopColor="var(--color-teal-500)" stopOpacity={0.55} />
-                        <stop offset="95%" stopColor="var(--color-teal-500)" stopOpacity={0.04} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,.14)" />
-                    <XAxis dataKey="day" tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} width={48} />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Area dataKey="jobs" stroke="var(--color-teal-400)" strokeWidth={3} fill="url(#candidateJobsGradient)" isAnimationActive={false} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </section>
-              <section>
-                <h3>Nhu cầu tuyển dụng theo role</h3>
-                <ResponsiveContainer width="100%" height={180}>
-                  <BarChart data={demandBars}>
-                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,.14)" />
-                    <XAxis dataKey="role" tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: "var(--color-teal-100)", fontSize: 10 }} axisLine={false} tickLine={false} width={42} />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Bar dataKey="value" fill="var(--color-teal-400)" radius={[8, 8, 2, 2]} maxBarSize={38} isAnimationActive={false} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </section>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="candidate-content-band">
-        <div className="candidate-section-head">
-          <div>
-            <h2>Việc gần bạn và việc remote phù hợp</h2>
-            <p>Ưu tiên vị trí đúng kỳ vọng lương, thời gian phản hồi nhanh và điểm uy tín tốt.</p>
-          </div>
-          <button><Navigation size={15} /> Cập nhật vị trí</button>
-        </div>
-        <div className="nearby-job-grid">
-          {nearbyJobs.map((job) => <CandidateJobCard compact job={job} key={`${job.title}-near`} onOpen={() => setSelectedJob(job)} />)}
-        </div>
-      </section>
-
-      <section className="candidate-employer-section">
-        <div className="candidate-section-head">
-          <div>
-            <h2>Nhà tuyển dụng nổi bật</h2>
-            <p>Công ty IT đã xác thực, phản hồi nhanh và đang mở nhiều vị trí phù hợp.</p>
-          </div>
-          <button onClick={() => navigate("/candidate/companies")}>Xem công ty <ChevronRight size={16} /></button>
-        </div>
-        <div className="top-company-grid">
-          {companies.slice(0, 5).map((company) => (
-            <article className="top-company-card" key={company.name}>
-              <span>TOP</span>
-              <div>{company.name.slice(0, 2).toUpperCase()}</div>
-              <strong>{company.name}</strong>
-              <p>{company.field} • {company.jobs} việc • Uy tín {company.trust}</p>
+function DashboardPage({ navigate }: Pick<CandidatePageProps, "navigate">) {
+  return (
+    <section className="cportal-shell dashboard-page">
+      <h1>Chào mừng Bình Phan!</h1>
+      <p className="page-date">Thứ Năm - 25/11/2025</p>
+      <div className="dashboard-grid">
+        <div className="stat-grid">
+          {stats.map(([value, label, growth, tone, Icon]) => (
+            <article className={`metric-card ${tone}`} key={label as string}>
+              <span><Icon size={20} /></span>
+              <strong>{value as string}</strong>
+              <p>{label as string}</p>
+              <em>{growth as string}</em>
             </article>
           ))}
         </div>
-        <div className="company-bubble-cloud">
-          {companies.slice(5, 16).map((company, index) => (
-            <button style={{ "--bubble-x": `${(index * 11) % 86}%`, "--bubble-y": `${18 + ((index * 23) % 58)}%`, "--bubble-size": `${62 + (index % 4) * 18}px` } as CSSProperties} key={company.name}>
-              {company.name.split(" ").map((word) => word[0]).join("").slice(0, 3)}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="candidate-tools-section">
-        {[
-          [FileText, "CV chuẩn IT", "Tạo CV có match score, nhiều phiên bản và trạng thái mặc định để ứng tuyển nhanh."],
-          [WandSparkles, "Trợ lý nghề nghiệp AI", "Gợi ý sửa CV, cover letter, câu hỏi phỏng vấn và khoảng lương nên đàm phán."],
-          [BookOpen, "Cẩm nang nghề nghiệp", "Theo dõi xu hướng React, Backend, Cloud, AI và lộ trình nâng cấp kỹ năng."],
-        ].map(([Icon, title, detail]) => (
-          <article className="candidate-tool-card" key={title as string}>
-            <Icon size={22} />
-            <strong>{title as string}</strong>
-            <p>{detail as string}</p>
-          </article>
-        ))}
-      </section>
-
-      {selectedJob && (
-        <Modal title={selectedJob.title} onClose={() => setSelectedJob(null)}>
-          <div className="job-detail-modal">
-            <div className="modal-job-head">
-              <div className="company-dot">{selectedJob.company.charAt(0)}</div>
-              <div>
-                <h3>{selectedJob.company}</h3>
-                <span>{selectedJob.place} • {selectedJob.salary} • Điểm uy tín {selectedJob.trust}</span>
-              </div>
-              <ScoreRing label="Match" value={selectedJob.match} />
-            </div>
-            <div className="match-reasons">
-              <div><strong>Vì sao phù hợp</strong><p>{selectedJob.tags.join(", ")} khớp với CV mặc định và kinh nghiệm sản phẩm IT.</p></div>
-              <div><strong>Cần kiểm tra</strong><p>So sánh range lương, hình thức làm việc và tốc độ phản hồi của nhà tuyển dụng.</p></div>
-              <div><strong>Luồng ứng tuyển</strong><p>Ứng tuyển bằng CV mặc định, theo dõi trạng thái và nhận lịch phỏng vấn trong Tin nhắn.</p></div>
-            </div>
-            <div className="modal-actions">
-              <button className="secondary-button"><Heart size={15} /> Lưu việc</button>
-              <button className="primary-button"><Zap size={15} /> Ứng tuyển nhanh</button>
-            </div>
+        <article className="performance-card">
+          <div><h2>Hiệu quả</h2><button>Sắp xếp: <b>Tuần này</b> <ChevronDown size={16} /></button></div>
+          <div className="legend"><span /> Lượt xem <i /> Lượt ứng tuyển</div>
+          <div className="mini-chart">
+            {[62, 78, 66, 62, 82, 62, 52].map((view, index) => (
+              <div className="chart-day" key={index}><b style={{ height: `${view}%` }} /><i style={{ height: `${Math.min(96, view + 24 - (index % 2) * 16)}%` }} /><span>{11 + index}<small>{["T2", "T3", "T4", "T5", "T6", "T7", "CN"][index]}</small></span></div>
+            ))}
           </div>
-        </Modal>
-      )}
+        </article>
+      </div>
+      <div className="dashboard-content">
+        <section>
+          <SectionTitle title="Việc làm mới nhất" />
+          <div className="dashboard-job-grid">
+            {brandJobs.slice(0, 4).map((job) => <DashboardJobCard job={job} key={job.title} navigate={navigate} />)}
+          </div>
+          <SectionTitle title="Công ty nổi bật" />
+          <div className="featured-company-row">
+            {companies.slice(0, 3).map(([name, sub, rating]) => <CompanyMiniCard name={name} sub={sub} rating={rating} key={name} />)}
+          </div>
+        </section>
+        <aside>
+          <SectionTitle title="Đề xuất cho bạn" action="Xem tất cả" />
+          <div className="recommend-stack">
+            {similarJobs.slice(0, 4).map((job) => <SimilarJobCard job={job} key={job[1]} navigate={navigate} />)}
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function JobSearchPage({ navigate }: Pick<CandidatePageProps, "navigate">) {
+  return (
+    <section className="cportal-shell job-search-page">
+      <div className="search-hero">
+        <label><Search size={23} /><input value="Tìm công việc, vị trí, công ty..." readOnly /></label>
+        <label><MapPin size={22} /><input value="Chọn địa điểm" readOnly /><ChevronDown size={18} /></label>
+        <label><BriefcaseBusiness size={22} /><input value="Loại công việc" readOnly /></label>
+        <button>Tìm việc ngay</button>
+      </div>
+      <div className="job-search-layout">
+        <FilterSidebar />
+        <main>
+          <div className="listing-head"><h2>Hiển thị: <b>125 việc làm</b></h2><button>Sắp xếp theo: <b>Phù hợp nhất</b> <ChevronDown size={16} /></button></div>
+          <div className="job-list-stack">
+            {brandJobs.map((job) => <JobListCard job={job} key={job.title} navigate={navigate} />)}
+          </div>
+        </main>
+      </div>
+    </section>
+  );
+}
+
+function JobDetailPage({ navigate }: Pick<CandidatePageProps, "navigate">) {
+  return (
+    <section className="cportal-shell detail-layout">
+      <button className="back-button" onClick={() => navigate("/candidate/jobs")}><ChevronLeft size={16} /> Trở về</button>
+      <div className="detail-grid">
+        <article className="job-detail-card">
+          <Cover />
+          <div className="detail-company-logo">FPT</div>
+          <div className="detail-title-row">
+            <div>
+              <h1>Fresher Java Developer</h1>
+              <p>FPT Software · Khu Công Nghệ Cao, TP.HCM · 2 ngày trước</p>
+            </div>
+            <button className="apply-now" onClick={() => navigate("/candidate/apply")}>Ứng tuyển ngay</button>
+            <button className="message-btn">Nhắn tin</button>
+            <button className="ghost-more"><MoreVertical size={20} /></button>
+          </div>
+          <div className="job-facts">
+            {["Kinh nghiệm|Dưới 1 năm", "Cấp bậc|Fresher", "Loại hình|Full Time", "Mức lương|10 - 15 Triệu/tháng"].map((item) => {
+              const [k, v] = item.split("|");
+              return <div key={k}><span>{k}</span><strong>{v}</strong></div>;
+            })}
+          </div>
+          <JobDescription />
+        </article>
+        <aside className="similar-panel">
+          <h2>Việc làm tương tự</h2>
+          {similarJobs.map((job) => <SimilarJobCard job={job} key={job[1]} navigate={navigate} />)}
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function ApplicationPage({ navigate }: Pick<CandidatePageProps, "navigate">) {
+  return (
+    <section className="application-page">
+      <button className="back-button" onClick={() => navigate("/candidate/jobs/fresher-java")}><ChevronLeft size={16} /> Back</button>
+      <article className="application-card">
+        <Cover />
+        <div className="detail-company-logo">u.</div>
+        <h1>Passionate Programmer</h1>
+        <p>UIHUT Technologies LLC · Sylhet, BD · 3 days ago</p>
+        <hr />
+        <h2>Submit Your Application</h2>
+        <hr />
+        <div className="application-upload-row">
+          <div><label>Linkedin Profile</label><button className="linkedin-btn">in <span>Apply With Linkedin</span></button></div>
+          <div><label>Resume/CV*</label><button className="attach-btn"><Paperclip size={22} /> Attach Resume/CV</button></div>
+        </div>
+        <hr />
+        <form className="application-form">
+          <label className="field active"><span>First Name</span><input value="Jubed" readOnly /></label>
+          <label className="field"><input placeholder="Last Name" /></label>
+          <div className="phone-row"><button type="button">+62 <ChevronDown size={15} /></button><label className="field"><input placeholder="Phone Number" /></label></div>
+          <label className="field select"><input placeholder="Your Country" /><ChevronDown size={17} /></label>
+          <label className="field mail"><input placeholder="Mail Address" /><span>@gmail.com</span></label>
+          <label className="bio-field"><span>Short Bio</span><textarea placeholder="Hello my name..." /></label>
+          <label className="terms"><input type="checkbox" /> I agree with terms & conditions</label>
+          <button className="submit-application" type="button">Submit Application</button>
+        </form>
+      </article>
+    </section>
+  );
+}
+
+function CompanyDetailPage({ navigate }: Pick<CandidatePageProps, "navigate">) {
+  return (
+    <section className="cportal-shell company-detail-page">
+      <button className="back-button" onClick={() => navigate("/candidate")}><ChevronLeft size={16} /> Back</button>
+      <div className="company-detail-layout">
+        <main>
+          <article className="company-profile-card">
+            <Cover />
+            <div className="company-profile-main">
+              <div className="detail-company-logo">u.</div>
+              <h1>UIHUT</h1>
+              <p>UIHUT Technologies LLC · Sylhet, BD</p>
+              <span>Design Resources platform · 203,765 Followers</span>
+              <div className="follower-row"><i /><i /><i /><b>+34</b><button><Plus size={16} /> Follow</button></div>
+            </div>
+          </article>
+          <div className="company-tabs">{["About", "Jobs", "Products", "Employees", "Locations", "Reviews"].map((tab) => <button className={tab === "Jobs" ? "active" : ""} key={tab}>{tab}</button>)}</div>
+          <article className="company-jobs-card">
+            <div className="company-job-search"><label><Search size={22} /><input value="Search Job title or Keyword" readOnly /></label><button>Search</button><button className="alert-btn"><Bell size={17} /> Creat Job alert</button></div>
+            <h2>Recently Posted Job</h2>
+            <div className="company-job-grid">
+              {[1, 2, 3, 4].map((item) => <SmallCompanyJob key={item} />)}
+            </div>
+            <button className="see-all-jobs">See All Jobs</button>
+          </article>
+        </main>
+        <aside>
+          <h2>Smiller Companies</h2>
+          {companies.map(([name, sub, rating]) => <CompanyFollowRow name={name} sub={sub} rating={rating} key={name} />)}
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function Cover() {
+  return <div className="abstract-cover" />;
+}
+
+function SectionTitle({ title, action }: { title: string; action?: string }) {
+  return <div className="section-title"><h2>{title}</h2>{action && <button>{action} <ChevronDown size={15} /></button>}</div>;
+}
+
+function DashboardJobCard({ job, navigate }: { job: typeof brandJobs[number]; navigate: (path: string) => void }) {
+  return (
+    <article className="dashboard-job-card">
+      <div className="job-card-head"><LogoBadge text={job.logo} /><div><h3>{job.title}</h3><Tags tags={job.tags.slice(0, 3)} /></div><MoreVertical size={18} /></div>
+      <p>Tại {job.company}, chúng tôi mang đến cơ hội tham gia các dự án tốt và phát triển trong môi trường quốc tế chuyên nghiệp.</p>
+      <div className="job-card-meta"><span>Full Time</span><span>{job.applicants} lượt</span><span>Còn 3 ngày</span></div>
+      <footer><strong>{job.salary}</strong><button onClick={() => navigate("/candidate/apply")}>Ứng tuyển ngay</button></footer>
+    </article>
+  );
+}
+
+function JobListCard({ job, navigate }: { job: typeof brandJobs[number]; navigate: (path: string) => void }) {
+  return (
+    <article className="job-list-card">
+      <LogoBadge text={job.logo} />
+      <div className="job-list-body">
+        <div><h3 onClick={() => navigate("/candidate/jobs/fresher-java")}>{job.title}</h3><button>Lưu <Bookmark size={15} fill="currentColor" /></button></div>
+        <p>{job.company} · {job.place} · {job.days}</p>
+        <span>Chúng tôi đang tìm kiếm những lập trình viên trẻ, đam mê công nghệ, sẵn sàng học hỏi từ chương trình đào tạo chuyên sâu và mong muốn phát triển sự nghiệp.</span>
+        <Tags tags={job.tags} />
+        <footer><strong>{job.salary}</strong><em>{job.applicants} Người ứng tuyển</em><button className="message-btn">Nhắn tin</button><button className="apply-now" onClick={() => navigate("/candidate/apply")}>Ứng tuyển ngay</button></footer>
+      </div>
+    </article>
+  );
+}
+
+function SimilarJobCard({ job, navigate }: { job: string[]; navigate: (path: string) => void }) {
+  return (
+    <article className="similar-job-card">
+      <LogoBadge text={job[0]} small />
+      <div><h3>{job[1]}</h3><p>{job[2]}</p><span>{job[4]}</span></div>
+      <strong>{job[3]}</strong>
+      <footer><button><Bookmark size={15} fill="currentColor" /></button><button onClick={() => navigate("/candidate/jobs/fresher-java")}>Xem</button></footer>
+    </article>
+  );
+}
+
+function LogoBadge({ text, small = false }: { text: string; small?: boolean }) {
+  return <div className={small ? "logo-badge small" : "logo-badge"}>{text}</div>;
+}
+
+function Tags({ tags }: { tags: string[] }) {
+  return <div className="tag-list">{tags.map((tag) => <span key={tag}>{tag}</span>)}</div>;
+}
+
+function FilterSidebar() {
+  const groups = [
+    ["Loại hình", ["Full Time", "Part Time", "Internship", "Freelance", "Remote", "Co-founder", "Contract"]],
+    ["Kinh nghiệm", ["Senior Level", "Entry Level", "Mid Level", "Student Level", "Directors", "VP or Above", "Contract"]],
+    ["Salary Range", ["$0 - $100", "$101 - $200", "$201 - $500", "$501 - $750", "$751 - $1000", "$1000 Above"]],
+  ];
+  return (
+    <aside className="filter-sidebar">
+      <article><h3>Đăng ký nhận việc</h3><p>Nhận thông báo ngay khi có việc làm mới phù hợp với bạn.</p><input value="Nhập email của bạn" readOnly /><button>Tạo thông báo</button></article>
+      {groups.map(([title, items]) => (
+        <section key={title as string}><h3>{title as string}<ChevronDown size={16} /></h3>{(items as string[]).map((item, index) => <label key={item}><span className={index === 0 ? "checked" : ""} /> {item}<b>{index === 0 ? "103" : "142"}</b></label>)}</section>
+      ))}
+      {["Location", "Language", "Facility"].map((item) => <section className="collapsed-filter" key={item}><h3>{item}<ChevronDown size={16} /></h3></section>)}
+    </aside>
+  );
+}
+
+function JobDescription() {
+  const duties = [
+    "Tham gia phát triển, bảo trì và tối ưu hóa các ứng dụng Web/Mobile sử dụng ngôn ngữ Java.",
+    "Viết code sạch, dễ bảo trì và tuân thủ các quy chuẩn coding của dự án.",
+    "Phối hợp chặt chẽ với BA, Tester, PM theo mô hình Agile/Scrum.",
+    "Tham gia review code, viết Unit Test để đảm bảo chất lượng sản phẩm đầu ra.",
+    "Báo cáo tiến độ công việc và các vấn đề phát sinh cho Technical Leader.",
+  ];
+  const skills = [
+    "Sinh viên năm cuối hoặc mới tốt nghiệp Đại học/Cao đẳng chuyên ngành CNTT, Phần mềm.",
+    "Có kiến thức nền tảng về OOP, Cấu trúc dữ liệu & Giải thuật.",
+    "Nắm vững Java Core. Biết về Spring Boot, Hibernate là lợi thế lớn.",
+    "Có kiến thức cơ bản về Cơ sở dữ liệu SQL, MySQL, Oracle.",
+    "Tư duy logic tốt, chủ động, ham học hỏi và chịu được áp lực công việc.",
+  ];
+  return (
+    <div className="job-description">
+      <h2>Mô tả chi tiết</h2>
+      <p>Gia nhập FPT Software với vai trò Fresher Java, bạn sẽ được tham gia trực tiếp vào các dự án phần mềm quy mô lớn với khách hàng từ Mỹ, Nhật Bản, Châu Âu. Đây là cơ hội tuyệt vời để đào tạo bài bản theo quy trình chuẩn quốc tế.</p>
+      <h3>Trách nhiệm công việc</h3>
+      <ul>{duties.map((duty) => <li key={duty}>{duty}</li>)}</ul>
+      <h3>Yêu cầu kỹ năng (Qualifications and Skill Sets)</h3>
+      <ul>{skills.map((skill) => <li key={skill}>{skill}</li>)}</ul>
+      <h3>About The Company</h3>
+      <div className="about-company-row"><LogoBadge text="u." /><div><strong>UIHUT</strong><p>203,765 Followers</p></div><button><Plus size={16} /> Follow</button></div>
+      <p>UIHUT is a design and coding resources platform for designers, developers and entrepreneurs. We’re building a digital marketplace to simplify the creation of websites, apps and software on any device.</p>
     </div>
   );
 }
 
-function CandidateJobCard({ job, compact = false, onOpen }: { job: Job; compact?: boolean; onOpen: () => void }) {
-  return (
-    <article className={compact ? "candidate-job-card compact" : "candidate-job-card"} onClick={onOpen}>
-      <div className="job-logo-box">{job.company.slice(0, 2).toUpperCase()}</div>
-      <div className="candidate-job-copy">
-        <div>
-          <h3>{job.title}</h3>
-          <button aria-label={`Lưu ${job.title}`} onClick={(event) => event.stopPropagation()}><Heart size={16} /></button>
-        </div>
-        <p>{job.company}</p>
-        <div className="candidate-job-tags">
-          <span>{job.salary}</span>
-          <span>{job.place}</span>
-          <span>{job.model}</span>
-        </div>
-        <div className="candidate-job-foot">
-          <span><Star size={13} /> Uy tín {job.trust}</span>
-          <span><TrendingUp size={13} /> {job.applicants} ứng viên</span>
-          <b>{job.match}% match</b>
-        </div>
-      </div>
-    </article>
-  );
+function CompanyMiniCard({ name, sub, rating }: { name: string; sub: string; rating: string }) {
+  return <article className="company-mini-card"><LogoBadge text={name} small /><h3>{name} Inc.</h3><p>⭐ {rating}</p><span>New york, USA</span><span>05 Job Vacancy</span><button>See All</button></article>;
+}
+
+function CompanyFollowRow({ name, sub, rating }: { name: string; sub: string; rating: string }) {
+  return <article className="company-follow-row"><LogoBadge text={name} small /><div><h3>{name}</h3><p>{sub}</p></div><span>⭐ {rating}</span><button><Plus size={16} /> Follow</button></article>;
+}
+
+function SmallCompanyJob() {
+  return <article className="small-company-job"><div><LogoBadge text="u." /><div><h3>Junior UI Designer</h3><Tags tags={["PHP", "Laravel", "CSS"]} /></div><MoreVertical size={18} /></div><p>Here at UIHUT, we are a passionate, fun-loving, growing team. We are looking for passionate programmers who want to solve.</p><footer><strong>$15k-20k/month</strong><button>Apply Now</button></footer></article>;
 }
