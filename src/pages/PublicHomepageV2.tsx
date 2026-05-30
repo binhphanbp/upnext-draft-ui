@@ -1,7 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   ArrowUpRight,
+  Bookmark,
   Bot,
   Brain,
   BriefcaseBusiness,
@@ -32,9 +33,6 @@ import {
   WalletCards,
 } from 'lucide-react';
 import { upnextLogo } from '../brand';
-import { HeroBoundary } from '../components/HeroBoundary';
-
-const HeroScene = lazy(() => import('./HeroScene'));
 
 type MenuItem = {
   label: string;
@@ -228,11 +226,12 @@ type PublicHomepageV2Props = {
 type FieldKey = 'keyword' | 'location';
 
 const popularSearches = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Full-stack Developer',
-  'DevOps Engineer',
-  'UI/UX Designer',
+  'Frontend',
+  'Backend',
+  'DevOps',
+  'AI Engineer',
+  'Data',
+  'UI/UX',
 ];
 
 const locationOptions = [
@@ -556,140 +555,222 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
         <section className="public-v2-hero">
           <div className="public-v2-copy">
             <span className="public-v2-eyebrow">
-              <Sparkles size={16} /> Nền tảng tuyển dụng IT hàng đầu dành cho
-              bạn
+              <Sparkles size={16} /> Nền tảng tuyển dụng IT hàng đầu
             </span>
             <h1>
-              Tìm việc IT phù hợp.
+              Tìm đúng việc IT.
               <br />
-              Bứt phá <span>sự nghiệp.</span>
+              Bật tăng <span>sự nghiệp.</span>
             </h1>
             <p>
-              Hàng ngàn cơ hội việc làm chất lượng từ các công ty công nghệ uy
-              tín. Tìm đúng việc - Đúng môi trường - Đúng định hướng.
+              UpNext kết nối ứng viên IT với các công ty công nghệ uy tín.
+              <br />
+              Tìm việc nhanh chóng, phù hợp kỹ năng và định hướng của bạn.
             </p>
+
+            <section
+              className="public-v2-search-card"
+              aria-label="Tìm kiếm việc làm IT"
+              ref={searchCardRef}
+            >
+              <form
+                className="public-v2-search-grid"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  runSearch();
+                }}
+              >
+                <div
+                  className={`public-v2-field public-v2-field-keyword${openField === 'keyword' ? ' is-open' : ''}`}
+                >
+                  <div className="public-v2-control">
+                    <Search size={20} />
+                    <input
+                      value={keyword}
+                      onChange={(event) => setKeyword(event.target.value)}
+                      onFocus={() => setOpenField('keyword')}
+                      placeholder="Nhập tên công việc, kỹ năng..."
+                      aria-label="Từ khóa tìm việc"
+                      autoComplete="off"
+                    />
+                  </div>
+                  {openField === 'keyword' && keywordMatches.length > 0 && (
+                    <ul
+                      className="public-v2-dropdown"
+                      role="listbox"
+                      aria-label="Gợi ý từ khóa"
+                    >
+                      {keywordMatches.map((item) => (
+                        <li key={item}>
+                          <button
+                            type="button"
+                            className="public-v2-option"
+                            role="option"
+                            aria-selected={keyword === item}
+                            onClick={() => {
+                              setKeyword(item);
+                              runSearch({ keyword: item });
+                            }}
+                          >
+                            <Search size={15} />
+                            {item}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <SelectField
+                  label="Địa điểm"
+                  icon={<MapPin size={19} />}
+                  placeholder="Tất cả địa điểm"
+                  value={location}
+                  options={locationOptions}
+                  open={openField === 'location'}
+                  onToggle={() => toggleField('location')}
+                  onSelect={(value) => {
+                    setLocation(value);
+                    setOpenField(null);
+                  }}
+                />
+
+                <button type="submit" className="public-v2-search-submit">
+                  <Search size={19} /> Tìm việc ngay
+                </button>
+              </form>
+            </section>
+
+            <div className="public-v2-popular">
+              <span>Từ khóa phổ biến:</span>
+              <div>
+                {popularSearches.map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setKeyword(item);
+                      runSearch({ keyword: item });
+                    }}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div
             className="public-v2-visual"
-            aria-label="Nền tảng kết nối các lĩnh vực nghề nghiệp IT"
+            aria-label="Ứng viên IT trên nền tảng UpNext"
           >
-            <HeroBoundary
-              fallback={
-                <img
-                  className="hero3d-fallback-img"
-                  src="/homepage-v2/hero-platform.png"
-                  alt="Nền tảng UpNext kết nối các lĩnh vực IT"
-                />
-              }
-            >
-              <Suspense
-                fallback={
-                  <div className="hero3d-fallback" aria-hidden="true" />
-                }
+            <div className="public-v2-stage">
+              <span className="public-v2-stage-blob" aria-hidden="true" />
+              <span className="public-v2-stage-ring" aria-hidden="true" />
+              <span
+                className="public-v2-stage-dot public-v2-stage-dot-1"
+                aria-hidden="true"
+              />
+              <span
+                className="public-v2-stage-dot public-v2-stage-dot-2"
+                aria-hidden="true"
+              />
+              <span
+                className="public-v2-stage-dot public-v2-stage-dot-3"
+                aria-hidden="true"
+              />
+
+              <img
+                className="public-v2-hero-banner"
+                src="/homepage-v2/hero-banner.png"
+                alt="Ứng viên IT đang làm việc trên nền tảng UpNext"
+              />
+
+              {/* Floating job card */}
+              <div
+                className="public-v2-float public-v2-float-job"
+                aria-hidden="true"
               >
-                <HeroScene navigate={navigate} />
-              </Suspense>
-            </HeroBoundary>
-          </div>
-        </section>
-
-        <section
-          className="public-v2-search-card"
-          aria-label="Tìm kiếm việc làm IT"
-          ref={searchCardRef}
-        >
-          <form
-            className="public-v2-search-grid"
-            onSubmit={(event) => {
-              event.preventDefault();
-              runSearch();
-            }}
-          >
-            <div
-              className={`public-v2-field public-v2-field-keyword${openField === 'keyword' ? ' is-open' : ''}`}
-            >
-              <span className="public-v2-field-label">Từ khóa</span>
-              <div className="public-v2-control">
-                <Search size={20} />
-                <input
-                  value={keyword}
-                  onChange={(event) => setKeyword(event.target.value)}
-                  onFocus={() => setOpenField('keyword')}
-                  placeholder="VD: React, Frontend, Engineer..."
-                  aria-label="Từ khóa tìm việc"
-                  autoComplete="off"
-                />
+                <div className="float-job-head">
+                  <span className="float-job-badge">
+                    <Sparkles size={12} /> Nổi bật
+                  </span>
+                  <Bookmark size={16} />
+                </div>
+                <b className="float-job-title">Senior Frontend Developer</b>
+                <span className="float-job-company">
+                  <Building2 size={13} /> UpNext • Hà Nội
+                </span>
+                <div className="float-job-tags">
+                  <i>React</i>
+                  <i>TypeScript</i>
+                  <i>Tailwind</i>
+                </div>
+                <strong className="float-job-salary">25 - 40 triệu VND</strong>
               </div>
-              {openField === 'keyword' && keywordMatches.length > 0 && (
-                <ul
-                  className="public-v2-dropdown"
-                  role="listbox"
-                  aria-label="Gợi ý từ khóa"
-                >
-                  {keywordMatches.map((item) => (
-                    <li key={item}>
-                      <button
-                        type="button"
-                        className="public-v2-option"
-                        role="option"
-                        aria-selected={keyword === item}
-                        onClick={() => {
-                          setKeyword(item);
-                          runSearch({ keyword: item });
-                        }}
-                      >
-                        <Search size={15} />
-                        {item}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+
+              {/* Tech stack bubbles */}
+              <span
+                className="public-v2-tech public-v2-tech-react"
+                aria-hidden="true"
+              >
+                React
+              </span>
+              <span
+                className="public-v2-tech public-v2-tech-node"
+                aria-hidden="true"
+              >
+                Node
+              </span>
+              <span
+                className="public-v2-tech public-v2-tech-py"
+                aria-hidden="true"
+              >
+                Py
+              </span>
+              <span
+                className="public-v2-tech public-v2-tech-ts"
+                aria-hidden="true"
+              >
+                TS
+              </span>
+
+              {/* Salary insight card */}
+              <div
+                className="public-v2-float public-v2-float-salary"
+                aria-hidden="true"
+              >
+                <span className="float-salary-label">Mức lương trung bình</span>
+                <span className="float-salary-role">Frontend Developer</span>
+                <strong className="float-salary-value">24.5 triệu</strong>
+                <span className="float-salary-trend">
+                  <TrendingUp size={13} /> 12% so với tháng trước
+                </span>
+                <span className="float-salary-spark" aria-hidden="true">
+                  <i style={{ height: '38%' }} />
+                  <i style={{ height: '54%' }} />
+                  <i style={{ height: '46%' }} />
+                  <i style={{ height: '70%' }} />
+                  <i style={{ height: '60%' }} />
+                  <i style={{ height: '88%' }} />
+                </span>
+              </div>
+
+              {/* Match pill */}
+              <div
+                className="public-v2-float public-v2-float-match"
+                aria-hidden="true"
+              >
+                <span className="float-match-icon">
+                  <Check size={16} />
+                </span>
+                <span className="float-match-text">
+                  <b>Phù hợp với bạn</b>
+                  <small>98% match với kỹ năng &amp; kinh nghiệm</small>
+                </span>
+                <ChevronRight size={18} />
+              </div>
             </div>
-
-            <SelectField
-              label="Địa điểm"
-              icon={<MapPin size={19} />}
-              placeholder="Chọn địa điểm"
-              value={location}
-              options={locationOptions}
-              open={openField === 'location'}
-              onToggle={() => toggleField('location')}
-              onSelect={(value) => {
-                setLocation(value);
-                setOpenField(null);
-              }}
-            />
-
-            <button type="submit" className="public-v2-search-submit">
-              Tìm việc ngay <Search size={20} />
-            </button>
-          </form>
-
-          <div className="public-v2-popular">
-            <span>Tìm kiếm phổ biến:</span>
-            <div>
-              {popularSearches.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    setKeyword(item);
-                    runSearch({ keyword: item });
-                  }}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-            <button
-              className="public-v2-view-all"
-              type="button"
-              onClick={() => navigate('/candidate/jobs')}
-            >
-              Xem tất cả <ChevronRight size={16} />
-            </button>
           </div>
         </section>
 
