@@ -11169,21 +11169,82 @@ input:focus-visible {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 10px;
+}
+
+.public-v2-header-actions .public-v2-employer {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 6px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.public-v2-header-actions .public-v2-employer svg {
+  color: #0aa56f;
+}
+
+.public-v2-action-sep {
+  width: 1px;
+  height: 24px;
+  background: #e5e9f0;
+}
+
+/* Segmented VI/EN language switch. */
+.public-v2-lang {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  background: #f1f5f9;
+  border-radius: 9px;
+}
+
+.public-v2-lang button {
+  min-width: 34px;
+  height: 30px;
+  padding: 0 8px;
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 800;
+  border-radius: 7px;
+  background: transparent;
+}
+
+.public-v2-lang button.is-active {
+  color: #0b7f5f;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+
+/* Light / dark mode toggle. */
+.public-v2-theme {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: #475569;
+  border: 1px solid #e5e9f0;
+  border-radius: 10px;
+  background: #ffffff;
 }
 
 .public-v2-header-actions .public-v2-login,
 .public-v2-header-actions .public-v2-register {
-  min-height: 46px;
-  padding: 0 24px;
+  min-height: 44px;
+  padding: 0 22px;
   font-size: 14px;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 9px;
+  white-space: nowrap;
 }
 
 .public-v2-header-actions .public-v2-login {
   color: #111827;
-  border: 1px solid #94a3b8;
+  border: 1px solid #cbd5e1;
   background: #ffffff;
 }
 
@@ -11191,15 +11252,6 @@ input:focus-visible {
   color: #ffffff;
   border: 1px solid #10a778;
   background: #0aa56f;
-}
-
-.public-v2-header-actions .public-v2-menu {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  margin-left: 7px;
-  color: #111827;
 }
 
 .public-v2-content {
@@ -11793,9 +11845,23 @@ button.public-v2-control {
     background: #f4f7fb;
   }
 
-  .public-v2-header-actions button:hover,
+  .public-v2-header-actions .public-v2-login:hover,
+  .public-v2-header-actions .public-v2-register:hover,
   .public-v2-search-submit:hover {
     transform: translateY(-2px);
+  }
+
+  .public-v2-employer:hover {
+    color: #0b7f5f;
+  }
+
+  .public-v2-theme:hover {
+    border-color: #c8ecdc;
+    background: #f3fdf8;
+  }
+
+  .public-v2-lang button:not(.is-active):hover {
+    color: #334155;
   }
 
   .public-v2-popular > div button:hover {
@@ -11876,21 +11942,20 @@ button.public-v2-control {
   }
 
   .public-v2-nav,
-  .public-v2-header-actions .public-v2-login {
+  .public-v2-header-actions .public-v2-login,
+  .public-v2-header-actions .public-v2-employer,
+  .public-v2-header-actions .public-v2-lang,
+  .public-v2-action-sep {
     display: none;
   }
 
   .public-v2-header-actions {
-    gap: 5px;
+    gap: 8px;
   }
 
   .public-v2-header-actions .public-v2-register {
     min-height: 42px;
     padding: 0 18px;
-  }
-
-  .public-v2-header-actions .public-v2-menu {
-    margin-left: 0;
   }
 
   .public-v2-content {

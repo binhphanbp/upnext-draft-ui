@@ -16,8 +16,8 @@ import {
   Landmark,
   Layers,
   MapPin,
-  Menu,
   MessagesSquare,
+  Moon,
   Newspaper,
   Route,
   Search,
@@ -25,6 +25,7 @@ import {
   Smartphone,
   Sparkles,
   Star,
+  Sun,
   TrendingUp,
   UsersRound,
   WalletCards,
@@ -308,6 +309,8 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
   const [workType, setWorkType] = useState('');
   const [openField, setOpenField] = useState<FieldKey | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [lang, setLang] = useState<'VI' | 'EN'>('VI');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const searchCardRef = useRef<HTMLElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
@@ -458,6 +461,56 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
 
         <div className="public-v2-header-actions">
           <button
+            className="public-v2-employer"
+            onClick={() => navigate('/employer')}
+          >
+            <Building2 size={16} />
+            Nhà tuyển dụng
+          </button>
+
+          <span className="public-v2-action-sep" aria-hidden="true" />
+
+          <div
+            className="public-v2-lang"
+            role="group"
+            aria-label="Chọn ngôn ngữ"
+          >
+            <button
+              type="button"
+              className={lang === 'VI' ? 'is-active' : ''}
+              aria-pressed={lang === 'VI'}
+              onClick={() => setLang('VI')}
+            >
+              VI
+            </button>
+            <button
+              type="button"
+              className={lang === 'EN' ? 'is-active' : ''}
+              aria-pressed={lang === 'EN'}
+              onClick={() => setLang('EN')}
+            >
+              EN
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="public-v2-theme"
+            aria-label={
+              theme === 'light'
+                ? 'Chuyển sang chế độ tối'
+                : 'Chuyển sang chế độ sáng'
+            }
+            onClick={() =>
+              setTheme((current) => (current === 'light' ? 'dark' : 'light'))
+            }
+          >
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+
+          <span className="public-v2-action-sep" aria-hidden="true" />
+
+          <button
             className="public-v2-login"
             onClick={() => navigate('/login')}
           >
@@ -468,13 +521,6 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
             onClick={() => navigate('/register')}
           >
             Đăng ký
-          </button>
-          <button
-            className="public-v2-menu"
-            aria-label="Mở menu"
-            onClick={() => navigate('/candidate')}
-          >
-            <Menu size={25} />
           </button>
         </div>
       </header>
