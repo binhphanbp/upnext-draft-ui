@@ -636,7 +636,7 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
                 />
 
                 <button type="submit" className="public-v2-search-submit">
-                  <Search size={19} /> Tìm việc ngay
+                  <Search size={19} /> Tìm việc
                 </button>
               </form>
             </section>

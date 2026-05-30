@@ -12260,7 +12260,7 @@ button.public-v2-control {
   .public-v2-employer:hover {
     border-color: #10b981;
     background: linear-gradient(135deg, #d8f5e8 0%, #eafaf2 60%, #ffffff 100%);
-    box-shadow: 0 8px 20px rgba(10, 165, 111, 0.18);
+    box-shadow: 0 3px 8px rgba(10, 165, 111, 0.14);
   }
 
   .public-v2-employer:hover::before {
@@ -12293,26 +12293,26 @@ button.public-v2-control {
     transform: rotate(45deg);
   }
 
-  /* Login (secondary): border + text adopt the brand, soft ring. */
+  /* Login (secondary): border + text adopt the brand, tight focus ring. */
   .public-v2-header-actions .public-v2-login:hover {
     color: #0b7f5f;
     border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
   }
 
-  /* Register (primary): deepens, lifts gently and the sheen sweeps across. */
+  /* Register (primary): deepens and the sheen sweeps across; crisp shadow. */
   .public-v2-header-actions .public-v2-register:hover {
     background: #098f63;
-    box-shadow: 0 10px 22px rgba(10, 165, 111, 0.32);
+    box-shadow: 0 4px 12px rgba(10, 165, 111, 0.22);
   }
 
   .public-v2-header-actions .public-v2-register:hover::after {
     left: 130%;
   }
 
-  /* Primary search button: same family as register, sheen + glow. */
+  /* Primary search button: same family as register, crisp shadow. */
   .public-v2-search-submit:hover {
-    box-shadow: 0 12px 26px rgba(10, 165, 111, 0.34);
+    box-shadow: 0 5px 14px rgba(10, 165, 111, 0.22);
   }
 
   /* Popular chips: fill with mint, gentle press feel. */
