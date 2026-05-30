@@ -10895,7 +10895,7 @@ input:focus-visible {
 }
 
 .public-v2-header {
-  min-height: 94px;
+  min-height: 72px;
   display: grid;
   grid-template-columns: auto auto minmax(0, 1fr);
   align-items: center;
@@ -10920,7 +10920,7 @@ input:focus-visible {
 }
 
 .public-v2-logo img {
-  width: 185px;
+  width: 158px;
   height: auto;
   display: block;
 }
@@ -10952,9 +10952,25 @@ input:focus-visible {
 }
 
 .public-v2-nav-trigger {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
+}
+
+/* Animated underline that grows from the center on hover/open. */
+.public-v2-nav-trigger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  margin: 0 auto;
+  width: 0;
+  border-radius: 2px;
+  background: #10b981;
+  transition: width 240ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .public-v2-nav-dd .public-v2-nav-trigger svg {
@@ -10963,6 +10979,10 @@ input:focus-visible {
 
 .public-v2-nav-dd.is-open .public-v2-nav-trigger {
   color: #0b7f5f;
+}
+
+.public-v2-nav-dd.is-open .public-v2-nav-trigger::after {
+  width: 100%;
 }
 
 .public-v2-nav-dd.is-open .public-v2-nav-trigger svg {
@@ -11173,57 +11193,180 @@ input:focus-visible {
 }
 
 .public-v2-header-actions .public-v2-employer {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
   min-height: 40px;
-  padding: 0 6px;
+  padding: 0 13px 0 15px;
   color: #334155;
-  font-size: 14px;
-  font-weight: 700;
+  border: 1px solid #bfe9d6;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eafaf2 0%, #f4fbf7 55%, #ffffff 100%);
   white-space: nowrap;
 }
 
-.public-v2-header-actions .public-v2-employer svg {
+/* Soft sheen that sweeps across on hover — marks it as the standout pill. */
+.public-v2-employer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left 650ms cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+}
+
+.public-v2-employer-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+
+.public-v2-employer-text small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #0a9f6f;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.public-v2-employer-text b {
+  color: #0f3d2e;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.public-v2-employer-arrow {
+  position: relative;
+  flex: 0 0 auto;
   color: #0aa56f;
+  transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .public-v2-action-sep {
   width: 1px;
-  height: 24px;
+  height: 22px;
   background: #e5e9f0;
 }
 
-/* Segmented VI/EN language switch. */
+/* Language dropdown — scales to any number of languages. */
 .public-v2-lang {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px;
-  background: #f1f5f9;
-  border-radius: 9px;
+  position: relative;
 }
 
-.public-v2-lang button {
-  min-width: 34px;
-  height: 30px;
-  padding: 0 8px;
-  color: #64748b;
-  font-size: 12.5px;
+.public-v2-lang-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 10px;
+  color: #475569;
+  font-size: 13px;
   font-weight: 800;
-  border-radius: 7px;
+  border: 1px solid #e5e9f0;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.public-v2-lang-trigger > svg:last-child {
+  color: #94a3b8;
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.public-v2-lang.is-open .public-v2-lang-trigger {
+  color: #0b7f5f;
+  border-color: #c8ecdc;
+  background: #f3fdf8;
+}
+
+.public-v2-lang.is-open .public-v2-lang-trigger > svg:last-child {
+  transform: rotate(180deg);
+}
+
+.public-v2-lang-menu {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 184px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #eceff3;
+  border-radius: 14px;
+  box-shadow:
+    0 20px 44px rgba(15, 23, 42, 0.14),
+    0 2px 6px rgba(15, 23, 42, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transform-origin: top right;
+  transition:
+    opacity 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    visibility 200ms;
+}
+
+.public-v2-lang.is-open .public-v2-lang-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.public-v2-lang-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 40px;
+  padding: 0 12px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  border-radius: 9px;
   background: transparent;
 }
 
-.public-v2-lang button.is-active {
+.public-v2-lang-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.public-v2-lang-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.public-v2-lang-option svg {
+  color: #0aa56f;
+}
+
+.public-v2-lang-option.is-active {
   color: #0b7f5f;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+  font-weight: 800;
+  background: #eafaf2;
 }
 
 /* Light / dark mode toggle. */
 .public-v2-theme {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   display: grid;
   place-items: center;
   color: #475569;
@@ -11232,10 +11375,14 @@ input:focus-visible {
   background: #ffffff;
 }
 
+.public-v2-theme svg {
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 .public-v2-header-actions .public-v2-login,
 .public-v2-header-actions .public-v2-register {
-  min-height: 44px;
-  padding: 0 22px;
+  min-height: 40px;
+  padding: 0 20px;
   font-size: 14px;
   font-weight: 700;
   border-radius: 9px;
@@ -11249,9 +11396,29 @@ input:focus-visible {
 }
 
 .public-v2-header-actions .public-v2-register {
+  position: relative;
+  overflow: hidden;
   color: #ffffff;
   border: 1px solid #10a778;
   background: #0aa56f;
+}
+
+/* Light sheen that sweeps across the primary button on hover. */
+.public-v2-header-actions .public-v2-register::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left 600ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .public-v2-content {
@@ -11824,46 +11991,105 @@ button.public-v2-control {
 }
 
 @media (hover: hover) {
-  .public-v2-nav button,
+  .public-v2-nav-trigger,
   .public-v2-header-actions button,
   .public-v2-search-submit,
   .public-v2-popular button {
     transition:
-      color 260ms cubic-bezier(0.32, 0.72, 0, 1),
-      border-color 260ms cubic-bezier(0.32, 0.72, 0, 1),
-      background 260ms cubic-bezier(0.32, 0.72, 0, 1),
-      transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
+      color 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      border-color 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      background 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      transform 240ms cubic-bezier(0.32, 0.72, 0, 1);
   }
 
-  .public-v2-nav button:hover {
+  /* Nav: text tints + underline sweeps in from the center. */
+  .public-v2-nav-trigger:hover {
     color: #0b7f5f;
   }
 
-  /* Mega-menu open state is driven by React (hover + click), so no CSS
-     hover-open rule here — only the item hover styling. */
+  .public-v2-nav-dd:hover .public-v2-nav-trigger::after {
+    width: 100%;
+  }
+
+  .public-v2-nav-dd:hover .public-v2-nav-trigger svg {
+    transform: rotate(180deg);
+  }
+
+  /* Mega-menu item: tinted panel + icon springs forward. */
   .public-v2-mega-item:hover {
     background: #f4f7fb;
   }
 
-  .public-v2-header-actions .public-v2-login:hover,
-  .public-v2-header-actions .public-v2-register:hover,
-  .public-v2-search-submit:hover {
-    transform: translateY(-2px);
+  .public-v2-mega-item .public-v2-mega-icon {
+    transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  .public-v2-mega-item:hover .public-v2-mega-icon {
+    transform: scale(1.1) rotate(-4deg);
+  }
+
+  /* Employer: the standout pill — gradient deepens, border + shadow brighten,
+     sheen sweeps across and the arrow shoots up-right. */
   .public-v2-employer:hover {
-    color: #0b7f5f;
+    border-color: #10b981;
+    background: linear-gradient(135deg, #d8f5e8 0%, #eafaf2 60%, #ffffff 100%);
+    box-shadow: 0 8px 20px rgba(10, 165, 111, 0.18);
   }
 
-  .public-v2-theme:hover {
+  .public-v2-employer:hover::before {
+    left: 135%;
+  }
+
+  .public-v2-employer:hover .public-v2-employer-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  /* Language dropdown: trigger tints, options highlight on hover. */
+  .public-v2-lang-trigger:hover {
+    color: #0b7f5f;
     border-color: #c8ecdc;
     background: #f3fdf8;
   }
 
-  .public-v2-lang button:not(.is-active):hover {
-    color: #334155;
+  .public-v2-lang-option:not(.is-active):hover {
+    background: #f4f7fb;
   }
 
+  /* Theme toggle: icon spins as it brightens. */
+  .public-v2-theme:hover {
+    color: #0aa56f;
+    border-color: #c8ecdc;
+    background: #f3fdf8;
+  }
+
+  .public-v2-theme:hover svg {
+    transform: rotate(45deg);
+  }
+
+  /* Login (secondary): border + text adopt the brand, soft ring. */
+  .public-v2-header-actions .public-v2-login:hover {
+    color: #0b7f5f;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+  }
+
+  /* Register (primary): deepens, lifts gently and the sheen sweeps across. */
+  .public-v2-header-actions .public-v2-register:hover {
+    background: #098f63;
+    box-shadow: 0 10px 22px rgba(10, 165, 111, 0.32);
+  }
+
+  .public-v2-header-actions .public-v2-register:hover::after {
+    left: 130%;
+  }
+
+  /* Primary search button: same family as register, sheen + glow. */
+  .public-v2-search-submit:hover {
+    box-shadow: 0 12px 26px rgba(10, 165, 111, 0.34);
+  }
+
+  /* Popular chips: fill with mint, gentle press feel. */
   .public-v2-popular > div button:hover {
     color: #087456;
     background: #e7fff7;
@@ -11875,6 +12101,14 @@ button.public-v2-control {
 
   .public-v2-option.is-active:hover {
     background: #defaef;
+  }
+
+  /* 3D hero chips: float forward with a soft shadow. */
+  .hero3d-label {
+    transition:
+      transform 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 240ms cubic-bezier(0.32, 0.72, 0, 1),
+      border-color 240ms cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .hero3d-label:hover {
@@ -11932,7 +12166,7 @@ button.public-v2-control {
 
 @media (max-width: 820px) {
   .public-v2-header {
-    min-height: 78px;
+    min-height: 64px;
     grid-template-columns: 1fr auto;
     padding: 0 20px;
   }

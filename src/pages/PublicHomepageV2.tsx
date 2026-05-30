@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
+  ArrowUpRight,
   Bot,
   Brain,
   BriefcaseBusiness,
@@ -12,6 +13,7 @@ import {
   Code2,
   Compass,
   FileText,
+  Globe,
   GraduationCap,
   Landmark,
   Layers,
@@ -269,6 +271,18 @@ const workTypeOptions = [
   'Freelance',
 ];
 
+type Language = {
+  code: string;
+  label: string;
+  flag: string;
+};
+
+// Add new languages here — the switch UI scales automatically.
+const languages: Language[] = [
+  { code: 'VI', label: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'EN', label: 'English', flag: '🇬🇧' },
+];
+
 const keywordSuggestions = [
   'React',
   'Vue.js',
@@ -309,8 +323,11 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
   const [workType, setWorkType] = useState('');
   const [openField, setOpenField] = useState<FieldKey | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [lang, setLang] = useState<'VI' | 'EN'>('VI');
+  const [lang, setLang] = useState<string>('VI');
+  const [langOpen, setLangOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  const langRef = useRef<HTMLDivElement | null>(null);
 
   const searchCardRef = useRef<HTMLElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
@@ -354,6 +371,26 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [openMenu]);
+
+  useEffect(() => {
+    if (!langOpen) return undefined;
+
+    function handlePointerDown(event: MouseEvent) {
+      if (!langRef.current?.contains(event.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setLangOpen(false);
+    }
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [langOpen]);
 
   const keywordMatches = useMemo(() => {
     const query = keyword.trim().toLowerCase();
@@ -464,33 +501,52 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
             className="public-v2-employer"
             onClick={() => navigate('/employer')}
           >
-            <Building2 size={16} />
-            Nhà tuyển dụng
+            <span className="public-v2-employer-text">
+              <small>Dành cho</small>
+              <b>Nhà Tuyển Dụng</b>
+            </span>
+            <ArrowUpRight className="public-v2-employer-arrow" size={17} />
           </button>
 
           <span className="public-v2-action-sep" aria-hidden="true" />
 
           <div
-            className="public-v2-lang"
-            role="group"
-            aria-label="Chọn ngôn ngữ"
+            className={`public-v2-lang${langOpen ? ' is-open' : ''}`}
+            ref={langRef}
           >
             <button
               type="button"
-              className={lang === 'VI' ? 'is-active' : ''}
-              aria-pressed={lang === 'VI'}
-              onClick={() => setLang('VI')}
+              className="public-v2-lang-trigger"
+              aria-haspopup="listbox"
+              aria-expanded={langOpen}
+              aria-label="Chọn ngôn ngữ"
+              onClick={() => setLangOpen((open) => !open)}
             >
-              VI
+              <Globe size={17} />
+              <span>{lang}</span>
+              <ChevronDown size={14} />
             </button>
-            <button
-              type="button"
-              className={lang === 'EN' ? 'is-active' : ''}
-              aria-pressed={lang === 'EN'}
-              onClick={() => setLang('EN')}
-            >
-              EN
-            </button>
+
+            <ul className="public-v2-lang-menu" role="listbox">
+              {languages.map((item) => (
+                <li key={item.code}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={lang === item.code}
+                    className={`public-v2-lang-option${lang === item.code ? ' is-active' : ''}`}
+                    onClick={() => {
+                      setLang(item.code);
+                      setLangOpen(false);
+                    }}
+                  >
+                    <span className="public-v2-lang-flag">{item.flag}</span>
+                    <span className="public-v2-lang-name">{item.label}</span>
+                    {lang === item.code && <Check size={15} />}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <button
