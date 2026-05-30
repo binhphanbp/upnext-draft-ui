@@ -11485,80 +11485,58 @@ input:focus-visible {
   justify-content: center;
 }
 
-/* Stage holds the banner plus floating UI elements layered around it. */
+/* Clean white stage; the backdrop is an SVG of soft blobs + connector arcs. */
 .public-v2-stage {
   position: relative;
   width: 100%;
-  max-width: 560px;
+  max-width: 580px;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: flex-end;
   justify-content: center;
 }
 
-/* Soft organic background blob behind the figure. */
-.public-v2-stage-blob {
+.public-v2-stage-bg {
   position: absolute;
-  inset: 6% 4% 2% 10%;
-  border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
-  background: radial-gradient(
-    120% 120% at 60% 30%,
-    rgba(16, 185, 129, 0.16),
-    rgba(214, 245, 230, 0.35) 45%,
-    rgba(240, 253, 247, 0) 72%
-  );
-  filter: blur(2px);
-}
-
-/* Thin decorative ring tracing the figure. */
-.public-v2-stage-ring {
-  position: absolute;
-  top: 8%;
-  right: 8%;
-  width: 78%;
-  height: 84%;
-  border: 1.5px dashed rgba(16, 185, 129, 0.28);
-  border-radius: 50%;
+  inset: -4% -6% -2% -2%;
+  width: 112%;
+  height: 106%;
 }
 
 .public-v2-stage-dot {
   position: absolute;
+  z-index: 1;
   border-radius: 50%;
   background: #10b981;
+  animation: public-v2-floaty 5s ease-in-out infinite;
 }
 
 .public-v2-stage-dot-1 {
-  top: 12%;
-  left: 16%;
+  top: 30%;
+  left: 6%;
   width: 9px;
   height: 9px;
   box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.14);
+  animation-delay: -1s;
 }
 
 .public-v2-stage-dot-2 {
-  top: 60%;
-  left: 7%;
+  bottom: 30%;
+  left: 2%;
   width: 7px;
   height: 7px;
   background: #34d399;
-}
-
-.public-v2-stage-dot-3 {
-  bottom: 16%;
-  right: 10%;
-  width: 8px;
-  height: 8px;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+  animation-delay: -2.4s;
 }
 
 .public-v2-hero-banner {
   position: relative;
   z-index: 2;
-  width: 88%;
-  max-width: 480px;
+  width: 90%;
+  max-width: 500px;
   height: auto;
   display: block;
-  filter: drop-shadow(0 24px 40px rgba(15, 23, 42, 0.12));
+  filter: drop-shadow(0 22px 36px rgba(15, 23, 42, 0.14));
 }
 
 /* Shared floating card style. */
@@ -11699,11 +11677,11 @@ input:focus-visible {
   opacity: 0.85;
 }
 
-/* Match pill — bottom center. */
+/* Match pill — bottom left, clear of the mug at center. */
 .public-v2-float-match {
-  bottom: -2%;
-  left: 22%;
-  width: 268px;
+  bottom: 4%;
+  left: -4%;
+  width: 256px;
   padding: 12px 14px;
   display: flex;
   align-items: center;
@@ -11744,47 +11722,46 @@ input:focus-visible {
   font-weight: 500;
 }
 
-/* Tech-stack bubbles around the figure. */
+/* Tech-stack bubbles around the figure with real brand logos. */
 .public-v2-tech {
   position: absolute;
   z-index: 3;
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
-  font-size: 13px;
-  font-weight: 800;
-  border-radius: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
   background: #ffffff;
-  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
   animation: public-v2-floaty 5.6s ease-in-out infinite;
 }
 
+.public-v2-tech svg {
+  width: 26px;
+  height: 26px;
+}
+
 .public-v2-tech-react {
-  top: 2%;
-  right: 14%;
-  color: #149eca;
+  top: 4%;
+  right: 16%;
   animation-delay: -0.6s;
 }
 
 .public-v2-tech-node {
-  top: 22%;
-  right: -2%;
-  color: #5a9e3f;
+  top: 20%;
+  right: 0%;
   animation-delay: -1.8s;
 }
 
 .public-v2-tech-py {
-  top: 44%;
-  right: -5%;
-  color: #d9a02b;
+  top: 42%;
+  right: -4%;
   animation-delay: -2.6s;
 }
 
 .public-v2-tech-ts {
-  top: 64%;
-  right: 4%;
-  color: #2f74c0;
+  top: 62%;
+  right: 3%;
   animation-delay: -3.2s;
 }
 
