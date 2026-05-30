@@ -1,22 +1,223 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
+  Bot,
+  Brain,
   BriefcaseBusiness,
   Building2,
   CalendarDays,
   Check,
   ChevronDown,
   ChevronRight,
+  Code2,
+  Compass,
+  FileText,
+  GraduationCap,
+  Landmark,
+  Layers,
   MapPin,
   Menu,
+  MessagesSquare,
+  Newspaper,
+  Route,
   Search,
+  ShieldCheck,
+  Smartphone,
   Sparkles,
+  Star,
+  TrendingUp,
   UsersRound,
+  WalletCards,
 } from 'lucide-react';
 import { upnextLogo } from '../brand';
 import { HeroBoundary } from '../components/HeroBoundary';
 
 const HeroScene = lazy(() => import('./HeroScene'));
+
+type MenuItem = {
+  label: string;
+  desc: string;
+  icon: ReactNode;
+  path: string;
+  badge?: string;
+  iconClass: string;
+};
+
+type NavMenu = {
+  key: string;
+  label: string;
+  eyebrow: string;
+  tagline: string;
+  /** Two columns look best for 4-6 items; one column for short lists. */
+  columns: 1 | 2;
+  items: MenuItem[];
+};
+
+const navMenus: NavMenu[] = [
+  {
+    key: 'jobs',
+    label: 'Việc làm IT',
+    eyebrow: 'Khám phá việc làm',
+    tagline: 'Tìm đúng vị trí theo chuyên môn và định hướng của bạn.',
+    columns: 2,
+    items: [
+      {
+        label: 'Frontend',
+        desc: 'React, Vue, Angular, UI Engineer.',
+        icon: <Code2 size={20} />,
+        path: '/candidate/jobs?position=Frontend Developer',
+        iconClass: 'feat-icon-cv',
+      },
+      {
+        label: 'Backend',
+        desc: 'Java, Node.js, Go, .NET, PHP.',
+        icon: <Layers size={20} />,
+        path: '/candidate/jobs?position=Backend Developer',
+        iconClass: 'feat-icon-ai',
+      },
+      {
+        label: 'Mobile',
+        desc: 'iOS, Android, Flutter, React Native.',
+        icon: <Smartphone size={20} />,
+        path: '/candidate/jobs?position=Mobile Developer',
+        iconClass: 'feat-icon-community',
+      },
+      {
+        label: 'Data & AI',
+        desc: 'Data Engineer, ML, AI Engineer.',
+        icon: <Brain size={20} />,
+        path: '/candidate/jobs?position=AI%2FML Engineer',
+        iconClass: 'feat-icon-path',
+      },
+      {
+        label: 'DevOps & Cloud',
+        desc: 'AWS, Kubernetes, CI/CD, SRE.',
+        icon: <ShieldCheck size={20} />,
+        path: '/candidate/jobs?position=DevOps Engineer',
+        iconClass: 'feat-icon-salary',
+      },
+      {
+        label: 'Tất cả việc làm',
+        desc: 'Duyệt toàn bộ tin tuyển dụng IT.',
+        icon: <BriefcaseBusiness size={20} />,
+        path: '/candidate/jobs',
+        iconClass: 'feat-icon-learn',
+      },
+    ],
+  },
+  {
+    key: 'companies',
+    label: 'Công ty IT',
+    eyebrow: 'Nhà tuyển dụng',
+    tagline: 'Tìm hiểu công ty uy tín trước khi ứng tuyển.',
+    columns: 1,
+    items: [
+      {
+        label: 'Top công ty công nghệ',
+        desc: 'Bảng xếp hạng theo điểm uy tín và đánh giá.',
+        icon: <Building2 size={20} />,
+        path: '/candidate/companies',
+        iconClass: 'feat-icon-cv',
+      },
+      {
+        label: 'Công ty đánh giá cao',
+        desc: 'Môi trường, phúc lợi và văn hóa nổi bật.',
+        icon: <Star size={20} />,
+        path: '/candidate/companies',
+        iconClass: 'feat-icon-salary',
+      },
+      {
+        label: 'Big Tech & Tập đoàn',
+        desc: 'FPT, Viettel, VNG, MoMo, ngân hàng số.',
+        icon: <Landmark size={20} />,
+        path: '/candidate/companies',
+        iconClass: 'feat-icon-ai',
+      },
+    ],
+  },
+  {
+    key: 'blog',
+    label: 'Bài viết',
+    eyebrow: 'Kiến thức & insight',
+    tagline: 'Cập nhật xu hướng và kinh nghiệm nghề nghiệp IT.',
+    columns: 1,
+    items: [
+      {
+        label: 'Tin tức công nghệ',
+        desc: 'Xu hướng, công nghệ mới và thị trường tuyển dụng.',
+        icon: <Newspaper size={20} />,
+        path: '/candidate/salary',
+        iconClass: 'feat-icon-community',
+      },
+      {
+        label: 'Cẩm nang nghề nghiệp',
+        desc: 'Hướng dẫn CV, phỏng vấn và phát triển sự nghiệp.',
+        icon: <Compass size={20} />,
+        path: '/candidate/salary',
+        iconClass: 'feat-icon-path',
+      },
+      {
+        label: 'Báo cáo lương IT',
+        desc: 'Số liệu lương theo vị trí, level và khu vực.',
+        icon: <TrendingUp size={20} />,
+        path: '/candidate/salary',
+        iconClass: 'feat-icon-salary',
+      },
+    ],
+  },
+  {
+    key: 'features',
+    label: 'Tính năng',
+    eyebrow: 'Công cụ cho ứng viên IT',
+    tagline: 'Mọi thứ bạn cần để tìm việc có chiến lược, không rải CV.',
+    columns: 2,
+    items: [
+      {
+        label: 'Tạo CV chuẩn IT',
+        desc: 'Mẫu CV tối ưu ATS, chấm điểm và gợi ý cải thiện theo JD.',
+        icon: <FileText size={20} />,
+        path: '/candidate/profile',
+        iconClass: 'feat-icon-cv',
+      },
+      {
+        label: 'Phỏng vấn AI',
+        desc: 'Luyện phỏng vấn với bộ câu hỏi theo CV, JD và level mục tiêu.',
+        icon: <Bot size={20} />,
+        path: '/candidate/ai',
+        badge: 'Mới',
+        iconClass: 'feat-icon-ai',
+      },
+      {
+        label: 'Lộ trình IT',
+        desc: 'Bản đồ nghề nghiệp từ Fresher đến Lead theo từng stack.',
+        icon: <Route size={20} />,
+        path: '/candidate/ai',
+        iconClass: 'feat-icon-path',
+      },
+      {
+        label: 'Cẩm nang lương',
+        desc: 'Dữ liệu lương theo vị trí, kinh nghiệm và khu vực.',
+        icon: <WalletCards size={20} />,
+        path: '/candidate/salary',
+        iconClass: 'feat-icon-salary',
+      },
+      {
+        label: 'Cộng đồng & Mentor',
+        desc: 'Hỏi đáp, review CV và kết nối mentor trong ngành.',
+        icon: <MessagesSquare size={20} />,
+        path: '/candidate/messages',
+        iconClass: 'feat-icon-community',
+      },
+      {
+        label: 'Học tập & Sự kiện',
+        desc: 'Workshop, livestream và khóa học kỹ năng cho dev.',
+        icon: <GraduationCap size={20} />,
+        path: '/candidate/ai',
+        iconClass: 'feat-icon-learn',
+      },
+    ],
+  },
+];
 
 type PublicHomepageV2Props = {
   navigate: (path: string) => void;
@@ -106,8 +307,10 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
   const [location, setLocation] = useState('');
   const [workType, setWorkType] = useState('');
   const [openField, setOpenField] = useState<FieldKey | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   const searchCardRef = useRef<HTMLElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!openField) return undefined;
@@ -128,6 +331,26 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [openField]);
+
+  useEffect(() => {
+    if (!openMenu) return undefined;
+
+    function handlePointerDown(event: MouseEvent) {
+      if (!navRef.current?.contains(event.target as Node)) {
+        setOpenMenu(null);
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setOpenMenu(null);
+    }
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [openMenu]);
 
   const keywordMatches = useMemo(() => {
     const query = keyword.trim().toLowerCase();
@@ -164,18 +387,73 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
           <img src={upnextLogo.wordmark} alt="UpNext" />
         </button>
 
-        <nav className="public-v2-nav" aria-label="Điều hướng chính">
-          <button onClick={() => navigate('/candidate/jobs')}>Việc làm</button>
-          <button onClick={() => navigate('/candidate/companies')}>
-            Công ty
-          </button>
-          <button onClick={() => navigate('/candidate/salary')}>
-            Tài nguyên <ChevronDown size={15} />
-          </button>
-          <button onClick={() => navigate('/candidate/ai')}>Lộ trình IT</button>
-          <button onClick={() => navigate('/candidate/messages')}>
-            Cộng đồng
-          </button>
+        <nav
+          className="public-v2-nav"
+          aria-label="Điều hướng chính"
+          ref={navRef}
+        >
+          {navMenus.map((menu) => (
+            <div
+              key={menu.key}
+              className={`public-v2-nav-dd${openMenu === menu.key ? ' is-open' : ''}`}
+              onMouseEnter={() => setOpenMenu(menu.key)}
+              onMouseLeave={() => setOpenMenu(null)}
+            >
+              <button
+                type="button"
+                className="public-v2-nav-trigger"
+                aria-haspopup="true"
+                aria-expanded={openMenu === menu.key}
+                onClick={() =>
+                  setOpenMenu((open) => (open === menu.key ? null : menu.key))
+                }
+              >
+                {menu.label}
+                <ChevronDown size={15} />
+              </button>
+
+              <div
+                className={`public-v2-mega${menu.columns === 1 ? ' is-single' : ''}`}
+                role="menu"
+              >
+                <div className="public-v2-mega-head">
+                  <span className="public-v2-mega-eyebrow">
+                    <Sparkles size={14} /> {menu.eyebrow}
+                  </span>
+                  <p>{menu.tagline}</p>
+                </div>
+                <div className="public-v2-mega-grid">
+                  {menu.items.map((item) => (
+                    <button
+                      key={item.label}
+                      type="button"
+                      role="menuitem"
+                      className="public-v2-mega-item"
+                      onClick={() => {
+                        setOpenMenu(null);
+                        navigate(item.path);
+                      }}
+                    >
+                      <i className={`public-v2-mega-icon ${item.iconClass}`}>
+                        {item.icon}
+                      </i>
+                      <span className="public-v2-mega-text">
+                        <b>
+                          <span>{item.label}</span>
+                          {item.badge && (
+                            <em className="public-v2-mega-badge">
+                              {item.badge}
+                            </em>
+                          )}
+                        </b>
+                        <small>{item.desc}</small>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
         </nav>
 
         <div className="public-v2-header-actions">

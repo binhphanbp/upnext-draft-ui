@@ -10897,10 +10897,10 @@ input:focus-visible {
 .public-v2-header {
   min-height: 94px;
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr) auto;
+  grid-template-columns: auto auto minmax(0, 1fr);
   align-items: center;
-  gap: 24px;
-  padding: 0 max(64px, calc((100vw - 1402px) / 2));
+  gap: 24px 44px;
+  padding: 0 48px;
   border-bottom: 1px solid #e5e7eb;
   background: rgba(255, 255, 255, 0.98);
 }
@@ -10928,8 +10928,8 @@ input:focus-visible {
 .public-v2-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 49px;
+  justify-content: flex-start;
+  gap: 38px;
 }
 
 .public-v2-nav button {
@@ -10944,9 +10944,231 @@ input:focus-visible {
   white-space: nowrap;
 }
 
+/* Features dropdown (mega-menu) */
+.public-v2-nav-dd {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.public-v2-nav-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.public-v2-nav-dd .public-v2-nav-trigger svg {
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.public-v2-nav-dd.is-open .public-v2-nav-trigger {
+  color: #0b7f5f;
+}
+
+.public-v2-nav-dd.is-open .public-v2-nav-trigger svg {
+  transform: rotate(180deg);
+}
+
+.public-v2-mega {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 18px);
+  left: -24px;
+  width: 640px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #eceff3;
+  border-radius: 18px;
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.14),
+    0 2px 6px rgba(15, 23, 42, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transform-origin: top left;
+  transition:
+    opacity 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    visibility 200ms;
+}
+
+/* Hover bridge so the menu doesn't close in the gap between trigger and panel. */
+.public-v2-mega::before {
+  content: '';
+  position: absolute;
+  top: -18px;
+  left: 0;
+  right: 0;
+  height: 18px;
+}
+
+.public-v2-mega::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 38px;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  background: #ffffff;
+  border-top: 1px solid #eceff3;
+  border-left: 1px solid #eceff3;
+}
+
+.public-v2-nav-dd.is-open .public-v2-mega {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.public-v2-mega-head {
+  margin: 4px 6px 16px;
+}
+
+.public-v2-mega-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #0a9f6f;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.public-v2-mega-head p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.public-v2-mega-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.public-v2-mega.is-single {
+  width: 360px;
+}
+
+.public-v2-mega.is-single .public-v2-mega-grid {
+  grid-template-columns: 1fr;
+}
+
+/* The last nav menu sits near the right edge — anchor its panel to the right
+   so a wide mega-menu never overflows the viewport. */
+.public-v2-nav-dd:last-child .public-v2-mega {
+  left: auto;
+  right: -24px;
+  transform-origin: top right;
+}
+
+.public-v2-nav-dd:last-child .public-v2-mega::after {
+  left: auto;
+  right: 38px;
+}
+
+.public-v2-mega-item {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 13px;
+  text-align: left;
+  border-radius: 13px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+
+.public-v2-mega-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+}
+
+.feat-icon-cv {
+  color: #2563eb;
+  background: #e6eefe;
+}
+.feat-icon-ai {
+  color: #0aa56f;
+  background: #e4f8f0;
+}
+.feat-icon-path {
+  color: #b5179e;
+  background: #fbe7f6;
+}
+.feat-icon-salary {
+  color: #d97706;
+  background: #fdf0db;
+}
+.feat-icon-community {
+  color: #0891b2;
+  background: #e0f5fa;
+}
+.feat-icon-learn {
+  color: #7c3aed;
+  background: #f0e9fe;
+}
+
+.public-v2-mega-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: block;
+  overflow: hidden;
+}
+
+.public-v2-mega-text b {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: #111827;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.public-v2-mega-text b > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.public-v2-mega-badge {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  color: #0a9f6f;
+  font-size: 10px;
+  font-weight: 800;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: #e4f8f0;
+  border-radius: 999px;
+}
+
+.public-v2-mega-text small {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .public-v2-header-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 14px;
 }
 
@@ -11565,6 +11787,12 @@ button.public-v2-control {
     color: #0b7f5f;
   }
 
+  /* Mega-menu open state is driven by React (hover + click), so no CSS
+     hover-open rule here — only the item hover styling. */
+  .public-v2-mega-item:hover {
+    background: #f4f7fb;
+  }
+
   .public-v2-header-actions button:hover,
   .public-v2-search-submit:hover {
     transform: translateY(-2px);
@@ -11592,7 +11820,8 @@ button.public-v2-control {
 
 @media (max-width: 1180px) {
   .public-v2-header {
-    grid-template-columns: 190px minmax(0, 1fr) auto;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 24px 30px;
     padding: 0 30px;
   }
 
