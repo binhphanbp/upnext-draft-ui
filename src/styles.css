@@ -2,6 +2,17 @@
   box-sizing: border-box;
 }
 
+/* Global text selection — on-brand highlight via semantic tokens. */
+::selection {
+  background: var(--color-selection-background);
+  color: var(--color-selection-text);
+}
+
+::-moz-selection {
+  background: var(--color-selection-background);
+  color: var(--color-selection-text);
+}
+
 :root {
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -118,6 +129,8 @@
   --color-error-subtle: var(--color-red-50);
   --color-error-text: var(--color-red-700);
   --color-focus-ring: var(--color-indigo-500);
+  --color-selection-background: #b9f0d8;
+  --color-selection-text: var(--color-teal-900);
   --color-selected-background: var(--color-teal-50);
   --color-selected-border: var(--color-teal-600);
   --color-selected-text: var(--color-teal-700);
@@ -183,6 +196,8 @@
   --color-action-primary-active: var(--color-teal-200);
   --color-action-primary-subtle: #053528;
   --color-action-primary-text: var(--color-teal-200);
+  --color-selection-background: var(--color-teal-700);
+  --color-selection-text: var(--color-teal-50);
   --color-action-premium-default: var(--color-indigo-400);
   --color-action-premium-hover: var(--color-indigo-300);
   --color-action-premium-active: var(--color-indigo-200);
