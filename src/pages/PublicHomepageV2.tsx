@@ -6,7 +6,6 @@ import {
   Brain,
   BriefcaseBusiness,
   Building2,
-  CalendarDays,
   Check,
   ChevronDown,
   ChevronRight,
@@ -226,7 +225,7 @@ type PublicHomepageV2Props = {
   navigate: (path: string) => void;
 };
 
-type FieldKey = 'keyword' | 'position' | 'location' | 'workType';
+type FieldKey = 'keyword' | 'location';
 
 const popularSearches = [
   'Frontend Developer',
@@ -234,21 +233,6 @@ const popularSearches = [
   'Full-stack Developer',
   'DevOps Engineer',
   'UI/UX Designer',
-];
-
-const positionOptions = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Full-stack Developer',
-  'Mobile Developer',
-  'DevOps Engineer',
-  'Data Engineer',
-  'AI/ML Engineer',
-  'QA / Tester',
-  'UI/UX Designer',
-  'Product Manager',
-  'Business Analyst',
-  'Solution Architect',
 ];
 
 const locationOptions = [
@@ -260,15 +244,6 @@ const locationOptions = [
   'Hải Phòng',
   'Remote',
   'Nước ngoài',
-];
-
-const workTypeOptions = [
-  'Toàn thời gian',
-  'Bán thời gian',
-  'Remote',
-  'Hybrid',
-  'Thực tập',
-  'Freelance',
 ];
 
 type Language = {
@@ -318,9 +293,7 @@ const trustedCompanies = [
 
 export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
   const [keyword, setKeyword] = useState('');
-  const [position, setPosition] = useState('');
   const [location, setLocation] = useState('');
-  const [workType, setWorkType] = useState('');
   const [openField, setOpenField] = useState<FieldKey | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [lang, setLang] = useState<string>('VI');
@@ -404,9 +377,7 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
     const params = new URLSearchParams();
     const term = (overrides?.keyword ?? keyword).trim();
     if (term) params.set('keyword', term);
-    if (position) params.set('position', position);
     if (location) params.set('location', location);
-    if (workType) params.set('type', workType);
     setOpenField(null);
     const query = params.toString();
     navigate(query ? `/candidate/jobs?${query}` : '/candidate/jobs');
@@ -678,20 +649,6 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
             </div>
 
             <SelectField
-              label="Vị trí"
-              icon={<BriefcaseBusiness size={19} />}
-              placeholder="Chọn vị trí"
-              value={position}
-              options={positionOptions}
-              open={openField === 'position'}
-              onToggle={() => toggleField('position')}
-              onSelect={(value) => {
-                setPosition(value);
-                setOpenField(null);
-              }}
-            />
-
-            <SelectField
               label="Địa điểm"
               icon={<MapPin size={19} />}
               placeholder="Chọn địa điểm"
@@ -701,20 +658,6 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
               onToggle={() => toggleField('location')}
               onSelect={(value) => {
                 setLocation(value);
-                setOpenField(null);
-              }}
-            />
-
-            <SelectField
-              label="Hình thức làm việc"
-              icon={<CalendarDays size={19} />}
-              placeholder="Tất cả hình thức"
-              value={workType}
-              options={workTypeOptions}
-              open={openField === 'workType'}
-              onToggle={() => toggleField('workType')}
-              onSelect={(value) => {
-                setWorkType(value);
                 setOpenField(null);
               }}
             />

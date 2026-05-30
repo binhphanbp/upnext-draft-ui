@@ -11586,8 +11586,8 @@ input:focus-visible {
 
 .public-v2-search-grid {
   display: grid;
-  grid-template-columns: 1.18fr 0.93fr 0.88fr 0.71fr 190px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr) 210px;
+  gap: 18px;
   align-items: end;
 }
 
@@ -12144,14 +12144,6 @@ button.public-v2-control {
   .hero3d-canvas,
   .hero3d-fallback {
     width: min(690px, 58vw);
-  }
-
-  .public-v2-search-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .public-v2-search-submit {
-    grid-column: span 4;
   }
 
   .public-v2-popular {
