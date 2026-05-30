@@ -11494,6 +11494,11 @@ input:focus-visible {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  /* Decorative + drag-interactive area: never let the browser text-select or
+     ghost-drag its contents while spinning the orbit. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .public-v2-stage-bg {
@@ -11537,6 +11542,10 @@ input:focus-visible {
   height: auto;
   display: block;
   filter: drop-shadow(0 22px 36px rgba(15, 23, 42, 0.14));
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 /* Shared floating card style. */
@@ -11729,6 +11738,9 @@ input:focus-visible {
   z-index: 1;
   cursor: grab;
   touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .tech-orbit:active {
@@ -11752,6 +11764,8 @@ input:focus-visible {
   backdrop-filter: blur(4px);
   will-change: transform, opacity;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .tech-orbit-chip svg {

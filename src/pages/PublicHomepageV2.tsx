@@ -731,6 +731,7 @@ export function PublicHomepageV2({ navigate }: PublicHomepageV2Props) {
                 className="public-v2-hero-banner"
                 src="/homepage-v2/hero-banner.png"
                 alt="Ứng viên IT đang làm việc trên nền tảng UpNext"
+                draggable={false}
               />
 
               {/* Floating job card */}
